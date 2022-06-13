@@ -1,0 +1,24 @@
+#!/sbin/nft -f
+
+flush ruleset
+
+table ip filter {
+	# allow all packets sent by the firewall machine itself
+	chain output {
+		type filter hook output priority 100; policy accept;
+	}
+
+	# allow LAN to firewall, disallow WAN to firewall
+	chain input {
+		type filter hook input priority 0; policy accept;
+		iifname "lan0" accept
+		iifname "wan0" drop
+	}
+
+	# allow packets from LAN to WAN, and WAN to LAN if LAN initiated the connection
+	chain forward {
+		type filter hook forward priority 0; policy drop;
+		iifname "lan0" oifname "wan0" accept
+		iifname "wan0" oifname "lan0" ct state related,established accept
+	}
+}

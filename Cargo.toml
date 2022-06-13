@@ -1,0 +1,20 @@
+[package]
+edition = "2021"
+name = "nft"
+version = "0.1.0"
+license = "MIT OR Apache-2.0"
+description = "Safe abstraction for nftables JSON API. It can be used to create nftables rulesets in Rust and parse existing nftables rulesets from JSON."
+homepage = "https://namib.me/"
+repository = "https://github.com/namib-project/nft-rs"
+readme = "README.md"
+keywords = ["nftables", "netfilter", "firewall"]
+categories = ["os", "network-programming"]
+
+[dependencies]
+serde = {version = "1.0.137", features = ["derive"]}
+serde_json = {version = "1.0.81"}
+serde_path_to_error = "0.1"
+strum = "0.24"
+strum_macros = "0.24"
+
+[build-dependencies]

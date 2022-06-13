@@ -1,0 +1,162 @@
+#                                  
+#   Netfilter's NFTable firewall   
+#                                  
+# This is just a ruleset to play around with the syntax introduced
+# in nftables and itis my way of getting to know it.
+#
+# Here might be dragons!
+#
+# To invoke:
+#
+#   $ sudo iptable-save > iptables.backup
+#   $ sudo iptables -P INPUT DROP
+#   $ sudo iptables -F
+#   $ sudo iptables -X
+#   $ sudo nft flush ruleset && sudo nft -f nftables-init.rules
+#
+# To get back to your iptables ruleset:
+#
+#  $ sudo nft flush ruleset
+#  $ sudo iptables-restore < iptables.backup
+#
+#  BEWARE: during the above commands there is a short moment where 
+#          there are no firewall rules active. That is why the default
+#          policy is changed to drop all traffic. But still you 
+#          should make sure to only try this on trusted networks! 
+#
+
+flush ruleset
+
+define admin = { 12.34.56.78/29, 10.11.12.0/8, 172.16.1.0/16 }
+define google_dns = { 8.8.8.8, 8.8.4.4 }
+define mailout = { 127.0.0.1 }
+
+table nat {
+    chain prerouting {
+        type nat hook prerouting priority 0
+        
+        # initiate redirecting on the local machine and redirect incoming 
+        # traffic on port 21 to 21212 which is nice for docker for example
+        redirect
+        tcp dport 21 redirect to 21212
+    }
+
+    chain postrouting {
+        type nat hook postrouting priority 0
+        
+        # we need this chain even if there are no rules for the return 
+        # path otherwise the path will not exist
+    }
+}
+
+table inet filter {
+    chain input {
+        type filter hook input priority 0; policy accept
+
+        # drop all bad actors before we do rel/est
+        ip saddr @blackhole drop
+        
+        # connection track and accept previous accepted traffic
+        ct state established,related accept
+        
+        # localhost godmode
+        iif lo accept
+        
+        # if the connection is NEW and is not SYN then drop
+        tcp flags != syn ct state new log prefix "FIRST PACKET IS NOT SYN" drop
+
+        # new and sending FIN the connection? DROP!
+        tcp flags & (fin|syn) == (fin|syn) log prefix "SCANNER1" drop
+
+        # i don't think we've met but you're sending a reset?
+        tcp flags & (syn|rst) == (syn|rst) log prefix "SCANNER2" drop
+
+        # 0 attack? 
+        tcp flags & (fin|syn|rst|psh|ack|urg) < (fin) log prefix "SCANNER3" drop 
+
+        # xmas attack. lights up everything
+        tcp flags & (fin|syn|rst|psh|ack|urg) == (fin|psh|urg) log prefix "SCANNER4" drop
+
+        # if the ctstate is invalid 
+        ct state invalid log flags all prefix "Invalid conntrack state: " counter drop
+
+        # open ssh, http and https and give them the new state 
+        tcp dport { ssh, http, https } ct state new accept
+
+        # handle packets from iprange to admin chain
+        ip saddr $admin jump admin
+        
+        # icmpv6 for ipv6 connections
+        ip6 nexthdr icmpv6 icmpv6 type {
+            destination-unreachable, packet-too-big, time-exceeded,
+            parameter-problem, nd-router-advert, nd-neighbor-solicit,
+            nd-neighbor-advert
+        } limit rate 100/second accept
+
+        # icmp for ipv4 connections 
+        ip protocol icmp icmp type {
+            destination-unreachable, router-advertisement, 
+            time-exceeded, parameter-problem 
+        } limit rate 100/second accept
+
+        # otherwise we drop, drop, drop
+        #
+        # when you are troubleshooting uncomment the next line.
+        # log prefix "Incoming packet dropped: "
+    }
+    
+    chain output {
+        type filter hook output priority 0; policy accept
+
+        # connection track and accept previous accepted traffic
+        ct state established,related accept
+        
+        # all powerfull... as long as it is to localhost
+        oif lo accept
+       
+        # allow DNS request if they are not to Google's DNS
+        # i think this would qualify as torture, but I
+        # have never claimed this set to be technically 
+        # or morraly sound. 
+        udp dport 53 ip daddr $google_dns accept
+        tcp dport 53 ip daddr $google_dns accept
+	
+        # allow dhcp
+        udp dport 67 accept
+
+        # youtube needs this for tracking where you are in the video... weird. 
+        udp dport 443 accept
+
+        # mail, really? are you malwa... -uhm- mailware!
+        tcp dport {25,465,587} ip daddr != $mailout log prefix "SPAMALERT!" drop
+
+        # allow web requests
+        tcp dport { http, https } ct state new accept
+
+        # limit outgoing icmp type 8 traffic
+        ip protocol icmp icmp type echo-request limit rate 1/second log accept
+
+        # log packet before it is dropped
+        log flags all prefix "Outgoing packet dropped: "
+    }
+    
+    chain admin {
+        tcp dport ssh ct state new log prefix "Admin connection:" accept
+    }
+    
+    set blackhole {
+    	# to add ip's to the blacklist you could use the commandline _nft_ tool ie:
+	# nft add element ip filter blackhole { 192.168.1.4, 192.168.1.5 }
+	
+        # blackhole ipset where we set the type of element as ipv4
+        type ipv4_addr
+        
+        # we will set a timer on the element after which it is cleared
+        flags timeout
+
+        # the value of the timer
+        timeout 1d
+    }
+}
+
+

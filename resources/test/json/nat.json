@@ -1,0 +1,66 @@
+{
+  "nftables": [
+    {
+      "metainfo": {
+        "version": "0.9.8",
+        "release_name": "E.D.S.",
+        "json_schema_version": 1
+      }
+    },
+    {
+      "table": {
+        "family": "ip",
+        "name": "nat",
+        "handle": 60
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "nat",
+        "name": "prerouting",
+        "handle": 1,
+        "type": "nat",
+        "hook": "prerouting",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "nat",
+        "name": "postrouting",
+        "handle": 2,
+        "type": "nat",
+        "hook": "postrouting",
+        "prio": 100,
+        "policy": "accept"
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "nat",
+        "chain": "postrouting",
+        "handle": 3,
+        "expr": [
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "meta": {
+                  "key": "oifname"
+                }
+              },
+              "right": "wan0"
+            }
+          },
+          {
+            "masquerade": null
+          }
+        ]
+      }
+    }
+  ]
+}

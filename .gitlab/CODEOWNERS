@@ -1,0 +1,6 @@
+## CODEOWNERS for autoreview assigning in gitlab
+
+# https://docs.gitlab.com/ee/user/project/code_owners.html
+
+[Maintainers]
+* @wiegratz
