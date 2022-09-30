@@ -13,6 +13,7 @@ pub enum Expression {
     /// List expressions are constructed by plain arrays containing of an arbitrary number of expressions.
     List(Vec<Expression>),
     BinaryOperation(BinaryOperation),
+    Range(Range),
 
     Named(NamedExpression),
 }
@@ -28,7 +29,6 @@ pub enum NamedExpression {
     Set(Vec<Expression>),
     Map(Box<Map>),
     Prefix(Prefix),
-    Range(Range),
 
     Payload(Payload),
     #[serde(rename = "payload")]
