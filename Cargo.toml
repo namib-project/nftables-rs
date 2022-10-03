@@ -9,6 +9,10 @@ repository = "https://github.com/namib-project/nft-rs"
 readme = "README.md"
 keywords = ["nftables", "netfilter", "firewall"]
 categories = ["os", "network-programming"]
+exclude = [
+    ".gitlab/*",
+    ".github/*",
+]
 
 [dependencies]
 serde = {version = "1.0.137", features = ["derive"]}
