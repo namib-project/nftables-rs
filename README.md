@@ -1,4 +1,7 @@
-# nftables-rs
+# nftables-rs &emsp; [![Latest Version]][crates.io]
+
+[Latest Version]: https://img.shields.io/crates/v/nftables.svg
+[crates.io]: https://crates.io/crates/nftables
 
 Safe abstraction for nftables JSON API ([libnftables-json](https://manpages.debian.org/testing/libnftables1/libnftables-json.5.en.html)).
 It can be used to create nftables rulesets in Rust and parse existing nftables rulesets from JSON.
