@@ -12,7 +12,7 @@ The goal of this library is to provide access to the complete expressiveness of 
 
 ```toml
 [dependencies]
-nft = "0.1"
+nftables = "0.2.0"
 ```
 
 ## Example
