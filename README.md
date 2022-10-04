@@ -1,10 +1,10 @@
-# nft-rs
+# nftables-rs
 
 Safe abstraction for nftables JSON API ([libnftables-json](https://manpages.debian.org/testing/libnftables1/libnftables-json.5.en.html)).
 It can be used to create nftables rulesets in Rust and parse existing nftables rulesets from JSON.
 This library can also interact with local nftables system with helper functions for reading and applying rulesets.
 
-nft-rs is inspired by [nftnl-rs](https://github.com/mullvad/nftnl-rs), which directly accesses the nf_tables kernel subsystem to work with nftables.
+nftables-rs is inspired by [nftnl-rs](https://github.com/mullvad/nftnl-rs), which directly accesses the nf_tables kernel subsystem to work with nftables.
 The goal of this library is to provide access to the complete expressiveness of the nftables schema.
 
 ```toml

@@ -1,11 +1,11 @@
 [package]
 edition = "2021"
-name = "nft"
+name = "nftables"
 version = "0.1.1"
 license = "MIT OR Apache-2.0"
 description = "Safe abstraction for nftables JSON API. It can be used to create nftables rulesets in Rust and parse existing nftables rulesets from JSON."
 homepage = "https://namib.me/"
-repository = "https://github.com/namib-project/nft-rs"
+repository = "https://github.com/namib-project/nftables-rs"
 readme = "README.md"
 keywords = ["nftables", "netfilter", "firewall"]
 categories = ["os", "network-programming"]

@@ -1,6 +1,6 @@
 use std::io::Read;
 
-use nft::schema::Nftables;
+use nftables::schema::Nftables;
 
 fn main() {
     deserialize_stdin();
