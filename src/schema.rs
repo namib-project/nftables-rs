@@ -49,7 +49,7 @@ pub enum NfCmd {
     Add(NfListObject), // TODO: CT_*
     Replace(Rule),
     Create(NfListObject), // TODO: ADD_OBJECT
-    Insert(Rule),
+    Insert(NfListObject),
     Delete(NfListObject), // TODO: ADD_OBJECT
     List(NfListObject),
     Reset(ResetObject),
