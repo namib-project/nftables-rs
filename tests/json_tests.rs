@@ -1,4 +1,4 @@
-use nft::{schema::*, types::*};
+use nftables::{schema::*, types::*};
 use serde_json::json;
 use std::fs::{self, File};
 use std::io::BufReader;

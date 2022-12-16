@@ -1,4 +1,4 @@
-use nft::{expr::*, schema::*, stmt::*, types::*};
+use nftables::{expr::*, schema::*, stmt::*, types::*};
 
 #[test]
 fn test_serialize() {

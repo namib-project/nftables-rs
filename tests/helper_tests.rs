@@ -1,4 +1,4 @@
-use nft::{batch::Batch, helper, schema, types};
+use nftables::{batch::Batch, helper, schema, types};
 
 #[test]
 #[ignore]
@@ -12,7 +12,7 @@ fn test_list_ruleset() {
 /// Applies a ruleset to nftables.
 fn test_apply_ruleset() {
     let ruleset = example_ruleset();
-    nft::helper::apply_ruleset(&ruleset, None, None).unwrap();
+    nftables::helper::apply_ruleset(&ruleset, None, None).unwrap();
 }
 
 fn example_ruleset() -> schema::Nftables {
