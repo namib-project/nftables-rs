@@ -1,9 +1,13 @@
-# nftables-rs &emsp; [![Latest Version]][crates.io] [![Actions Badge]][Actions]
+# nftables-rs &emsp; [![Latest Version]][crates.io] [![docs.io Badge]][docs.io] [![Actions Badge]][Actions] [![license Badge]][license]
 
 [Latest Version]: https://img.shields.io/crates/v/nftables.svg
 [crates.io]: https://crates.io/crates/nftables
+[docs.io Badge]: https://img.shields.io/badge/docs.rs-nftables-green.svg
+[docs.io]: https://docs.rs/nftables/latest/nftables/
 [Actions Badge]: https://github.com/namib-project/nftables-rs/actions/workflows/rust.yml/badge.svg
 [Actions]: https://github.com/namib-project/nftables-rs/actions/workflows/rust.yml
+[license Badge]: https://img.shields.io/crates/l/nftables.svg
+[license]: LICENSE-MIT
 
 Safe abstraction for nftables JSON API ([libnftables-json](https://manpages.debian.org/testing/libnftables1/libnftables-json.5.en.html)).
 It can be used to create nftables rulesets in Rust and parse existing nftables rulesets from JSON.
