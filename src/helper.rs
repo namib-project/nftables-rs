@@ -14,7 +14,7 @@ pub fn get_current_ruleset(program: Option<&str>, args: Option<Vec<&str>>) -> Nf
 }
 
 pub fn get_current_ruleset_raw(program: Option<&str>, args: Option<Vec<&str>>) -> String {
-    let nft_executable: &str = program.or(Some(NFT_EXECUTABLE)).unwrap();
+    let nft_executable: &str = program.unwrap_or(NFT_EXECUTABLE);
     let mut nft_cmd = get_command(Some(nft_executable));
     let default_args = ["-j", "list", "ruleset"];
     let args: Vec<&str> = match args {
@@ -48,7 +48,7 @@ pub fn apply_ruleset_raw(
     program: Option<&str>,
     args: Option<Vec<&str>>,
 ) -> io::Result<()> {
-    let nft_executable: &str = program.or(Some(NFT_EXECUTABLE)).unwrap();
+    let nft_executable: &str = program.unwrap_or(NFT_EXECUTABLE);
     let mut nft_cmd = get_command(Some(nft_executable));
     let default_args = ["-j", "-f", "-"];
     let args: Vec<&str> = match args {
@@ -79,6 +79,6 @@ pub fn apply_ruleset_raw(
 }
 
 fn get_command(program: Option<&str>) -> Command {
-    let nft_executable: &str = program.or(Some(NFT_EXECUTABLE)).unwrap();
+    let nft_executable: &str = program.unwrap_or(NFT_EXECUTABLE);
     Command::new(nft_executable)
 }
