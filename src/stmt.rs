@@ -282,7 +282,7 @@ pub struct Set {
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
-/// Operators of `Set`.
+/// Operators on `Set`.
 pub enum SetOp {
     Add,
     Update,

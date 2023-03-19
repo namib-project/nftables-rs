@@ -1,4 +1,4 @@
-use nftables::{batch::Batch, helper, schema, types};
+use nftables::{batch::Batch, helper, schema, types, expr};
 
 #[test]
 #[ignore]
@@ -17,10 +17,33 @@ fn test_apply_ruleset() {
 
 fn example_ruleset() -> schema::Nftables {
     let mut batch = Batch::new();
+    let table_name = "test-table-01".to_string();
     batch.add(schema::NfListObject::Table(schema::Table::new(
         types::NfFamily::IP,
-        "test-table-01".to_string(),
+        table_name.clone(),
     )));
+    // create named set
+    let set_name = "test_set".to_string();
+    batch.add(schema::NfListObject::Set(schema::Set {
+        family: types::NfFamily::IP,
+        table: table_name.clone(),
+        name: set_name.clone(),
+        handle: None,
+        set_type: schema::SetTypeValue::Single(schema::SetType::Ipv4Addr),
+        policy: None,
+        flags: None,
+        elem: None,
+        timeout: None,
+        gc_interval: None,
+        size: None,
+    }));
+    // add element to set
+    batch.add(schema::NfListObject::Element(schema::Element {
+        family: types::NfFamily::IP,
+        table: table_name,
+        name: set_name,
+        elem: vec![expr::Expression::String("127.0.0.1".to_string()), expr::Expression::String("127.0.0.2".to_string())],
+    }));
     batch.delete(schema::NfListObject::Table(schema::Table::new(
         types::NfFamily::IP,
         "test-table-01".to_string(),

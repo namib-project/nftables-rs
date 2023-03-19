@@ -4,7 +4,7 @@ use crate::{expr::Expression, stmt::Statement, types::*};
 
 use serde::{Deserialize, Serialize};
 
-use crate::visitor::single_string_to_vec;
+use strum_macros::EnumString;
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Nftables {
@@ -179,8 +179,8 @@ pub struct Set {
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub handle: Option<u32>,
-    #[serde(rename = "type", deserialize_with = "single_string_to_vec")]
-    pub set_type: Vec<String>,
+    #[serde(rename = "type")]
+    pub set_type: SetTypeValue,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub policy: Option<SetPolicy>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -201,13 +201,50 @@ pub struct Map {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+/// Wrapper for single or concatenated set types.
+/// The set type might be a string, such as "ipv4_addr" or an array consisting of strings (for concatenated types).
+pub enum SetTypeValue {
+    Single(SetType),
+    Concatenated(Vec<SetType>),
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, EnumString)]
 #[serde(rename_all = "lowercase")]
+/// Describes a set’s datatype.
+pub enum SetType {
+    // ipv4_addr, ipv6_addr, ether_addr, inet_proto, inet_service, mark 
+    #[serde(rename = "ipv4_addr")]
+    #[strum(serialize="ipv4_addr")]
+    Ipv4Addr,
+    #[serde(rename = "ipv6_addr")]
+    #[strum(serialize="ipv6_addr")]
+    Ipv6Addr,
+    #[serde(rename = "ether_addr")]
+    #[strum(serialize="ether_addr")]
+    EtherAddr,
+    #[serde(rename = "inet_proto")]
+    #[strum(serialize="inet_proto")]
+    InetProto,
+    #[serde(rename = "inet_service")]
+    #[strum(serialize="inet_service")]
+    InetService,
+    #[serde(rename = "mark")]
+    #[strum(serialize="mark")]
+    Mark,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+/// Describes a set’s policy.
 pub enum SetPolicy {
     Performance,
     Memory,
 }
+
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, Hash)]
 #[serde(rename_all = "lowercase")]
+/// Describes a set’s flags.
 pub enum SetFlag {
     Constant,
     Interval,
@@ -216,6 +253,7 @@ pub enum SetFlag {
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
+/// Describes an operator on set.
 pub enum SetOp {
     Add,
     Update,
