@@ -223,10 +223,10 @@ pub enum SetOp {
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Element {
-    family: String,
-    table: String,
-    name: String,
-    elem: String, // TODO
+    pub family: NfFamily,
+    pub table: String,
+    pub name: String,
+    pub elem: Vec<Expression>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
