@@ -154,3 +154,14 @@ fn test_parsing_of_queue_without_flags() {
     let parsed: Nftables = serde_json::from_value(json).unwrap();
     assert_eq!(expected, parsed);
 }
+
+#[test]
+fn test_queue_json_serialisation() {
+    let queue = Statement::Queue(Queue {
+        num: Expression::Number(0),
+        flags: None,
+    });
+
+    let expected_json = String::from(r#"{"queue":{"num":0}}"#);
+    assert_eq!(expected_json, serde_json::to_string(&queue).unwrap());
+}
