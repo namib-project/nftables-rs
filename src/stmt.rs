@@ -385,7 +385,7 @@ pub struct Queue {
     pub num: Expression,
 
     /// Queue flags.
-    pub flags: HashSet<QueueFlag>,
+    pub flags: Option<HashSet<QueueFlag>>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize, Hash)]
