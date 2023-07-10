@@ -1,5 +1,5 @@
 use nftables::expr::{Expression, Meta, MetaKey, NamedExpression};
-use nftables::stmt::{Match, Operator, Statement};
+use nftables::stmt::{Match, Operator, Queue, Statement};
 use nftables::{schema::*, types::*};
 use serde_json::json;
 use std::fs::{self, File};
@@ -90,4 +90,78 @@ fn test_insert() {
     println!("{}", &json);
     let parsed: Nftables = serde_json::from_value(json).unwrap();
     assert_eq!(expected, parsed);
+}
+
+#[test]
+fn test_parsing_of_queue_without_flags() {
+    let expected = Nftables {
+        objects: vec![NfObject::ListObject(NfListObject::Rule(Rule {
+            family: NfFamily::IP,
+            table: "test_table".to_string(),
+            chain: "test_chain".to_string(),
+            expr: vec![
+                Statement::Match(Match {
+                    left: Expression::Named(NamedExpression::Payload(nftables::expr::Payload {
+                        protocol: "udp".to_string(),
+                        field: "dport".to_string(),
+                    })),
+                    right: Expression::Number(20000),
+                    op: Operator::EQ,
+                }),
+                Statement::Queue(Queue {
+                    num: Expression::Number(0),
+                    flags: None,
+                }),
+            ],
+            handle: Some(2),
+            index: None,
+            comment: None,
+        }))],
+    };
+
+    let json = json!({
+        "nftables": [
+            {
+                "rule": {
+                    "family": "ip",
+                    "table": "test_table",
+                    "chain": "test_chain",
+                    "handle": 2,
+                    "expr": [
+                    {
+                        "match": {
+                            "op": "==",
+                            "left": {
+                                "payload": {
+                                    "protocol": "udp",
+                                    "field": "dport"
+                                }
+                            },
+                            "right": 20000
+                        }
+                    },
+                    {
+                        "queue": {
+                            "num": 0
+                        }
+                    }
+                ]
+                }
+            }
+        ]
+    });
+
+    let parsed: Nftables = serde_json::from_value(json).unwrap();
+    assert_eq!(expected, parsed);
+}
+
+#[test]
+fn test_queue_json_serialisation() {
+    let queue = Statement::Queue(Queue {
+        num: Expression::Number(0),
+        flags: None,
+    });
+
+    let expected_json = String::from(r#"{"queue":{"num":0}}"#);
+    assert_eq!(expected_json, serde_json::to_string(&queue).unwrap());
 }

@@ -384,8 +384,9 @@ pub struct Queue {
     /// Queue number.
     pub num: Expression,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
     /// Queue flags.
-    pub flags: HashSet<QueueFlag>,
+    pub flags: Option<HashSet<QueueFlag>>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize, Hash)]
