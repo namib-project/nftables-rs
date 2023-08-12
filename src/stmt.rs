@@ -118,10 +118,10 @@ pub struct Match {
 pub struct Counter {
     #[serde(skip_serializing_if = "Option::is_none")]
     /// Packets counted.
-    pub packets: Option<u32>,
+    pub packets: Option<usize>,
     #[serde(skip_serializing_if = "Option::is_none")]
     /// Bytes counted.
-    pub bytes: Option<u32>,
+    pub bytes: Option<usize>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
