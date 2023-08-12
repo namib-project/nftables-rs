@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
+use crate::stmt::Statement;
+
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 /// Expressions are the building blocks of (most) statements.
@@ -26,7 +28,7 @@ pub enum NamedExpression {
     Concat(Vec<Expression>),
     /// This object constructs an anonymous set.
     /// For mappings, an array of arrays with exactly two elements is expected.
-    Set(Vec<Expression>),
+    Set(Vec<SetItem>),
     Map(Box<Map>),
     Prefix(Prefix),
 
@@ -58,6 +60,19 @@ pub struct Map {
     /// Mapping expression consisting of value/target pairs.
     pub data: Expression,
 }
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+/// Item in an anonymous set.
+pub enum SetItem{
+    /// A set item containing a single expression.
+    Element(Expression),
+    /// A set item mapping two expressions.
+    Mapping(Expression, Expression),
+    /// A set item mapping an expression to a statement.
+    MappingStatement(Expression, Statement),
+}
+
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename = "prefix")]
