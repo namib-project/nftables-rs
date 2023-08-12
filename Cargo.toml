@@ -15,10 +15,11 @@ exclude = [
 ]
 
 [dependencies]
-serde = {version = "1.0.137", features = ["derive"]}
-serde_json = {version = "1.0.81"}
+serde = { version = "1.0.137", features = ["derive"] }
+serde_json = { version = "1.0.81" }
 serde_path_to_error = "0.1"
 strum = "0.24"
 strum_macros = "0.24"
+thiserror = "1.0"
 
 [build-dependencies]

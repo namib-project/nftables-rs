@@ -1,10 +1,10 @@
-use nftables::{batch::Batch, helper, schema, types, expr};
+use nftables::{batch::Batch, expr, helper, schema, types};
 
 #[test]
 #[ignore]
 /// Reads current ruleset from nftables and reads it to `Nftables` Rust struct.
 fn test_list_ruleset() {
-    helper::get_current_ruleset(None, None);
+    helper::get_current_ruleset(None, None).unwrap();
 }
 
 #[test]
@@ -42,7 +42,10 @@ fn example_ruleset() -> schema::Nftables {
         family: types::NfFamily::IP,
         table: table_name,
         name: set_name,
-        elem: vec![expr::Expression::String("127.0.0.1".to_string()), expr::Expression::String("127.0.0.2".to_string())],
+        elem: vec![
+            expr::Expression::String("127.0.0.1".to_string()),
+            expr::Expression::String("127.0.0.2".to_string()),
+        ],
     }));
     batch.delete(schema::NfListObject::Table(schema::Table::new(
         types::NfFamily::IP,
