@@ -1,4 +1,9 @@
-use nftables::{batch::Batch, expr, helper, schema, types};
+use nftables::{
+    batch::Batch,
+    expr,
+    helper::{self, NftablesError},
+    schema, types,
+};
 
 #[test]
 #[ignore]
@@ -13,6 +18,22 @@ fn test_list_ruleset() {
 fn test_apply_ruleset() {
     let ruleset = example_ruleset();
     nftables::helper::apply_ruleset(&ruleset, None, None).unwrap();
+}
+
+#[test]
+#[ignore]
+/// Attempts to delete an unknown table, expecting an error.
+fn test_remove_unknown_table() {
+    let mut batch = Batch::new();
+    batch.delete(schema::NfListObject::Table(schema::Table::new(
+        types::NfFamily::IP6,
+        "i-do-not-exist".to_string(),
+    )));
+    let ruleset = batch.to_nftables();
+
+    let result = nftables::helper::apply_ruleset(&ruleset, None, None);
+    let err = result.expect_err("Expecting nftables error for unknown table.");
+    assert!(matches!(err, NftablesError::NftFailed { .. }));
 }
 
 fn example_ruleset() -> schema::Nftables {
@@ -53,3 +74,4 @@ fn example_ruleset() -> schema::Nftables {
     )));
     batch.to_nftables()
 }
+
