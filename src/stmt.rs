@@ -74,7 +74,7 @@ pub enum Statement {
 
     /// This represents an xt statement from xtables compat interface.
     /// Sadly, at this point, it is not possible to provide any further information about its content.
-    XT(Option<bool>),
+    XT(Option<serde_json::Value>),
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
@@ -118,10 +118,10 @@ pub struct Match {
 pub struct Counter {
     #[serde(skip_serializing_if = "Option::is_none")]
     /// Packets counted.
-    pub packets: Option<u32>,
+    pub packets: Option<usize>,
     #[serde(skip_serializing_if = "Option::is_none")]
     /// Bytes counted.
-    pub bytes: Option<u32>,
+    pub bytes: Option<usize>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
