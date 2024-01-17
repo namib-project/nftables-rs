@@ -252,6 +252,7 @@ pub enum SetFlag {
     Constant,
     Interval,
     Timeout,
+    Dynamic,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
