@@ -58,6 +58,22 @@ fn example_ruleset() -> schema::Nftables {
         gc_interval: None,
         size: None,
     }));
+    let map_name = "test_map".to_string();
+    let map_type = "verdict".to_string();
+    batch.add(schema::NfListObject::Map(schema::Map {
+        family: types::NfFamily::IP,
+        table: table_name.clone(),
+        name: map_name.clone(),
+        handle: None,
+        map: map_type.clone(),
+        set_type: schema::SetTypeValue::Single(schema::SetType::Ipv4Addr),
+        policy: None,
+        flags: None,
+        elem: None,
+        timeout: None,
+        gc_interval: None,
+        size: None,
+    }));
     // add element to set
     batch.add(schema::NfListObject::Element(schema::Element {
         family: types::NfFamily::IP,

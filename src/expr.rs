@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 use crate::stmt::Statement;
+use crate::stmt::JumpTarget;
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -18,6 +19,7 @@ pub enum Expression {
     Range(Range),
 
     Named(NamedExpression),
+    Verdict(Verdict),
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
@@ -45,7 +47,6 @@ pub enum NamedExpression {
     JHash(JHash),
     SymHash(SymHash),
     Fib(Fib),
-    Verdict(Verdict),
     Elem(Elem),
     Socket(Socket),
     Osf(Osf),
@@ -346,8 +347,8 @@ pub enum Verdict {
     Drop,
     Continue,
     Return,
-    Jump(String),
-    Goto(String),
+    Jump(JumpTarget),
+    Goto(JumpTarget),
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
