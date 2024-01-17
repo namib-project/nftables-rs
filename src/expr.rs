@@ -352,13 +352,20 @@ pub enum Verdict {
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+/// Explicitly set element object.
+pub struct ElemCounter {
+    pub packets: u32,
+    pub bytes: u32,
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename = "elem")]
 /// Explicitly set element object.
 pub struct Elem {
     pub val: Box<Expression>,
-    pub timeout: u32,
-    pub expires: u32,
-    pub comment: String,
+    pub timeout: Option<u32>,
+    pub expires: Option<u32>,
+    pub comment: Option<String>,
     pub counter: Option<Counter>,
 }
 
