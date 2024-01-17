@@ -232,6 +232,9 @@ pub enum SetType {
     #[serde(rename = "mark")]
     #[strum(serialize="mark")]
     Mark,
+    #[serde(rename = "ifname")]
+    #[strum(serialize="ifname")]
+    Ifname,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
