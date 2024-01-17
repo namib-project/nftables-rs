@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 use crate::stmt::Statement;
+use crate::stmt::Counter;
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -358,6 +359,7 @@ pub struct Elem {
     pub timeout: u32,
     pub expires: u32,
     pub comment: String,
+    pub counter: Option<Counter>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
