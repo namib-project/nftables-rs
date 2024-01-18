@@ -217,6 +217,8 @@ pub struct Map {
     pub gc_interval: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub comment: Option<String>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]

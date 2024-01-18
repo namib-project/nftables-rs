@@ -73,6 +73,7 @@ fn example_ruleset() -> schema::Nftables {
         timeout: None,
         gc_interval: None,
         size: None,
+        comment: None,
     }));
     // add element to set
     batch.add(schema::NfListObject::Element(schema::Element {
