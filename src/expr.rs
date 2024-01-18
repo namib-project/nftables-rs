@@ -352,13 +352,6 @@ pub enum Verdict {
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
-/// Explicitly set element object.
-pub struct ElemCounter {
-    pub packets: u32,
-    pub bytes: u32,
-}
-
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename = "elem")]
 /// Explicitly set element object.
 pub struct Elem {
