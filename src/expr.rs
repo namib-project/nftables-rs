@@ -36,6 +36,7 @@ pub enum NamedExpression {
     #[serde(rename = "payload")]
     PayloadRaw(PayloadRaw),
     Exthdr(Exthdr),
+    #[serde(rename = "tcp option")]
     TcpOption(TcpOption),
     SctpChunk(SctpChunk),
     Meta(Meta),
