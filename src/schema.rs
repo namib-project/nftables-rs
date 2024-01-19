@@ -197,7 +197,28 @@ pub struct Set {
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Map {
-    // TODO
+    pub family: NfFamily,
+    pub table: String,
+    pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub handle: Option<u32>,
+    #[serde(rename = "type")]
+    pub set_type: SetTypeValue,
+    pub map: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub policy: Option<SetPolicy>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub flags: Option<HashSet<SetFlag>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub elem: Option<Vec<Expression>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub timeout: Option<u32>,
+    #[serde(rename = "gc-interval", skip_serializing_if = "Option::is_none")]
+    pub gc_interval: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub size: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub comment: Option<String>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
