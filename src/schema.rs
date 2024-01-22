@@ -40,6 +40,7 @@ pub enum NfListObject {
     #[serde(rename = "metainfo")]
     MetainfoObject(MetainfoObject),
     CTTimeout(CTTimeout),
+    #[serde(rename = "ct expectation")]
     CTExpectation(CTExpectation),
 }
 
