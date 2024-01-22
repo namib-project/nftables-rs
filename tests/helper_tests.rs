@@ -64,9 +64,9 @@ fn example_ruleset() -> schema::Nftables {
     batch.add(schema::NfListObject::Map(schema::Map {
         family: types::NfFamily::IP,
         table: table_name.clone(),
-        name: map_name.clone(),
+        name: map_name,
         handle: None,
-        map: map_type.clone(),
+        map: map_type,
         set_type: schema::SetTypeValue::Single(schema::SetType::Ipv4Addr),
         policy: None,
         flags: None,

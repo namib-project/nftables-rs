@@ -51,12 +51,13 @@ pub fn get_current_ruleset_raw(
         }
         None => default_args.to_vec(),
     };
+    let program = nft_cmd.get_program().to_str().unwrap().to_string();
     let process_result = nft_cmd
         .args(args)
         .output()
         .map_err(|e| NftablesError::NftExecution {
             inner: e,
-            program: format!("{}", nft_cmd.get_program().to_str().unwrap()),
+            program: program.clone(),
         })?;
 
     let stdout = read_output(&nft_cmd, process_result.stdout)?;
@@ -65,7 +66,7 @@ pub fn get_current_ruleset_raw(
         let stderr = read_output(&nft_cmd, process_result.stderr)?;
 
         return Err(NftablesError::NftFailed {
-            program: format!("{}", nft_cmd.get_program().to_str().unwrap()),
+            program,
             hint: "getting the current ruleset".to_string(),
             stdout,
             stderr,
@@ -97,13 +98,14 @@ pub fn apply_ruleset_raw(
         }
         None => default_args.to_vec(),
     };
+    let program = nft_cmd.get_program().to_str().unwrap().to_string();
     let mut process = nft_cmd
         .args(args)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .spawn()
         .map_err(|e| NftablesError::NftExecution {
-            program: format!("{}", nft_cmd.get_program().to_str().unwrap()),
+            program: program.clone(),
             inner: e,
         })?;
 
@@ -111,7 +113,7 @@ pub fn apply_ruleset_raw(
     stdin
         .write_all(payload.as_bytes())
         .map_err(|e| NftablesError::NftExecution {
-            program: format!("{}", nft_cmd.get_program().to_str().unwrap()),
+            program: program.clone(),
             inner: e,
         })?;
     drop(stdin);
@@ -124,14 +126,14 @@ pub fn apply_ruleset_raw(
             let stderr = read_output(&nft_cmd, process_result.stderr)?;
 
             Err(NftablesError::NftFailed {
-                program: format!("{}", nft_cmd.get_program().to_str().unwrap()),
+                program,
                 hint: "applying ruleset".to_string(),
                 stdout,
                 stderr,
             })
         }
         Err(e) => Err(NftablesError::NftExecution {
-            program: format!("{}", nft_cmd.get_program().to_str().unwrap()),
+            program: nft_cmd.get_program().to_str().unwrap().to_string(),
             inner: e,
         }),
     }
@@ -145,6 +147,6 @@ fn get_command(program: Option<&str>) -> Command {
 fn read_output(cmd: &Command, bytes: Vec<u8>) -> Result<String, NftablesError> {
     String::from_utf8(bytes).map_err(|e| NftablesError::NftOutputEncoding {
         inner: e,
-        program: format!("{}", cmd.get_program().to_str().unwrap()),
+        program: cmd.get_program().to_str().unwrap().to_string(),
     })
 }
