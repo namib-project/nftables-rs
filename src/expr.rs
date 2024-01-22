@@ -39,6 +39,7 @@ pub enum NamedExpression {
     Exthdr(Exthdr),
     #[serde(rename = "tcp option")]
     TcpOption(TcpOption),
+    #[serde(rename = "sctp chunk")]
     SctpChunk(SctpChunk),
     Meta(Meta),
     RT(RT),

@@ -1,0 +1,41 @@
+# this tests various key names with spaces: 
+#   * ct count
+#   * ct expectation
+#   * ct helper
+#   * ct timeout
+#   * sctp chunk
+#   * tcp option
+# nft rule snippets are taken from wiki.nftables.org
+
+table ip filter {
+	ct expectation e_pgsql {
+		protocol tcp
+		dport 5432
+		timeout 1h
+		size 12
+		l3proto ip
+	}
+
+	ct helper ftp-standard {
+		type "ftp" protocol tcp
+		l3proto ip
+	}
+
+	chain INPUT {
+		type filter hook input priority filter; policy accept;
+		tcp dport 22 ct count 10 accept
+		ct state new tcp dport 8888 ct expectation set "e_pgsql"
+		ct state established,related counter packets 0 bytes 0 accept
+	}
+
+	chain FORWARD {
+		type filter hook forward priority filter; policy accept;
+		tcp flags syn counter packets 0 bytes 0 tcp option maxseg size set rt mtu
+		sctp chunk data flags 2
+		ct helper "ftp-standard" accept
+	}
+
+	chain OUTPUT {
+		type filter hook output priority filter; policy accept;
+	}
+}

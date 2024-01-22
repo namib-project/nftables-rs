@@ -1,0 +1,266 @@
+{
+  "nftables": [
+    {
+      "metainfo": {
+        "version": "1.0.7",
+        "release_name": "Old Doc Yak",
+        "json_schema_version": 1
+      }
+    },
+    {
+      "table": {
+        "family": "ip",
+        "name": "filter",
+        "handle": 1
+      }
+    },
+    {
+      "ct expectation": {
+        "family": "ip",
+        "name": "e_pgsql",
+        "table": "filter",
+        "handle": 4,
+        "protocol": "tcp",
+        "dport": 5432,
+        "timeout": 3600000,
+        "size": 12,
+        "l3proto": "ip"
+      }
+    },
+    {
+      "ct helper": {
+        "family": "ip",
+        "name": "ftp-standard",
+        "table": "filter",
+        "handle": 5,
+        "type": "ftp",
+        "protocol": "tcp",
+        "l3proto": "ip"
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "filter",
+        "name": "INPUT",
+        "handle": 1,
+        "type": "filter",
+        "hook": "input",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "filter",
+        "name": "FORWARD",
+        "handle": 2,
+        "type": "filter",
+        "hook": "forward",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "filter",
+        "name": "OUTPUT",
+        "handle": 3,
+        "type": "filter",
+        "hook": "output",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "filter",
+        "chain": "INPUT",
+        "handle": 6,
+        "expr": [
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "dport"
+                }
+              },
+              "right": 22
+            }
+          },
+          {
+            "ct count": {
+              "val": 10
+            }
+          },
+          {
+            "accept": null
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "filter",
+        "chain": "INPUT",
+        "handle": 7,
+        "expr": [
+          {
+            "match": {
+              "op": "in",
+              "left": {
+                "ct": {
+                  "key": "state"
+                }
+              },
+              "right": "new"
+            }
+          },
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "dport"
+                }
+              },
+              "right": 8888
+            }
+          },
+          {
+            "ct expectation": "e_pgsql"
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "filter",
+        "chain": "INPUT",
+        "handle": 8,
+        "expr": [
+          {
+            "match": {
+              "op": "in",
+              "left": {
+                "ct": {
+                  "key": "state"
+                }
+              },
+              "right": [
+                "established",
+                "related"
+              ]
+            }
+          },
+          {
+            "counter": {
+              "packets": 0,
+              "bytes": 0
+            }
+          },
+          {
+            "accept": null
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "filter",
+        "chain": "FORWARD",
+        "handle": 9,
+        "expr": [
+          {
+            "match": {
+              "op": "in",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "flags"
+                }
+              },
+              "right": "syn"
+            }
+          },
+          {
+            "counter": {
+              "packets": 0,
+              "bytes": 0
+            }
+          },
+          {
+            "mangle": {
+              "key": {
+                "tcp option": {
+                  "name": "maxseg",
+                  "field": "size"
+                }
+              },
+              "value": {
+                "rt": {
+                  "key": "mtu"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "filter",
+        "chain": "FORWARD",
+        "handle": 10,
+        "expr": [
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "sctp chunk": {
+                  "name": "data",
+                  "field": "flags"
+                }
+              },
+              "right": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "filter",
+        "chain": "FORWARD",
+        "handle": 11,
+        "expr": [
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "ct": {
+                  "key": "helper"
+                }
+              },
+              "right": "ftp-standard"
+            }
+          },
+          {
+            "accept": null
+          }
+        ]
+      }
+    }
+  ]
+}
