@@ -193,6 +193,8 @@ pub struct Set {
     pub gc_interval: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub comment: Option<String>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
@@ -234,25 +236,28 @@ pub enum SetTypeValue {
 #[serde(rename_all = "lowercase")]
 /// Describes a set’s datatype.
 pub enum SetType {
-    // ipv4_addr, ipv6_addr, ether_addr, inet_proto, inet_service, mark 
+    // ipv4_addr, ipv6_addr, ether_addr, inet_proto, inet_service, mark
     #[serde(rename = "ipv4_addr")]
-    #[strum(serialize="ipv4_addr")]
+    #[strum(serialize = "ipv4_addr")]
     Ipv4Addr,
     #[serde(rename = "ipv6_addr")]
-    #[strum(serialize="ipv6_addr")]
+    #[strum(serialize = "ipv6_addr")]
     Ipv6Addr,
     #[serde(rename = "ether_addr")]
-    #[strum(serialize="ether_addr")]
+    #[strum(serialize = "ether_addr")]
     EtherAddr,
     #[serde(rename = "inet_proto")]
-    #[strum(serialize="inet_proto")]
+    #[strum(serialize = "inet_proto")]
     InetProto,
     #[serde(rename = "inet_service")]
-    #[strum(serialize="inet_service")]
+    #[strum(serialize = "inet_service")]
     InetService,
     #[serde(rename = "mark")]
-    #[strum(serialize="mark")]
+    #[strum(serialize = "mark")]
     Mark,
+    #[serde(rename = "ifname")]
+    #[strum(serialize = "ifname")]
+    Ifname,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
@@ -270,6 +275,7 @@ pub enum SetFlag {
     Constant,
     Interval,
     Timeout,
+    Dynamic,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]

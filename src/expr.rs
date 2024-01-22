@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-use crate::stmt::Statement;
-use crate::stmt::JumpTarget;
+use crate::stmt::{Counter, JumpTarget, Statement};
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -66,7 +65,7 @@ pub struct Map {
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 /// Item in an anonymous set.
-pub enum SetItem{
+pub enum SetItem {
     /// A set item containing a single expression.
     Element(Expression),
     /// A set item mapping two expressions.
@@ -74,7 +73,6 @@ pub enum SetItem{
     /// A set item mapping an expression to a statement.
     MappingStatement(Expression, Statement),
 }
-
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename = "prefix")]
@@ -357,9 +355,10 @@ pub enum Verdict {
 /// Explicitly set element object.
 pub struct Elem {
     pub val: Box<Expression>,
-    pub timeout: u32,
-    pub expires: u32,
-    pub comment: String,
+    pub timeout: Option<u32>,
+    pub expires: Option<u32>,
+    pub comment: Option<String>,
+    pub counter: Option<Counter>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]

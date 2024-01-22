@@ -57,6 +57,7 @@ fn example_ruleset() -> schema::Nftables {
         timeout: None,
         gc_interval: None,
         size: None,
+        comment: None,
     }));
     let map_name = "test_map".to_string();
     let map_type = "verdict".to_string();
@@ -91,4 +92,3 @@ fn example_ruleset() -> schema::Nftables {
     )));
     batch.to_nftables()
 }
-
