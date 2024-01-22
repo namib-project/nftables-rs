@@ -18,6 +18,6 @@ convert_file () {
   ip netns delete $NETNS
 }
 
-for nftfile in $INPUT_DIR/*.nft; do
-  convert_file $nftfile | jq > $OUTPUT_DIR/$(basename $nftfile .nft).json
+for nftfile in "$INPUT_DIR"/*.nft; do
+  convert_file "$nftfile" | jq > "$OUTPUT_DIR/$(basename "$nftfile" .nft).json"
 done
