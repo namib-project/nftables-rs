@@ -5,6 +5,8 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  schedule:
+    - cron: '13 3 * * 0'
 
 env:
   CARGO_TERM_COLOR: always
@@ -24,4 +26,5 @@ jobs:
     - name: Run tests
       run: cargo test --verbose
     - name: Run tests (rootful)
-      run: sudo -E $(which cargo) test --verbose -- --ignored
+      run: nft --version; sudo -E $(which cargo) test --verbose -- --ignored
+
