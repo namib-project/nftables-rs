@@ -26,8 +26,9 @@ pub enum NfChainType {
     NAT,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, EnumString)]
 #[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
 /// Represents the policy of a Chain.
 pub enum NfChainPolicy {
     Accept,

@@ -1,13 +1,27 @@
 #[macro_export]
 macro_rules! nft {
     (@some_or_none) => { None };
+    (@some_or_none null) => { None };
     (@some_or_none $entity:literal) => { Some($entity) };
+    (@some_or_none $entity:ident) => { Some(stringify!($entity).to_string()) };
+
+    // Helper macro for creating an NfChainPolicy from an identifier
+    (@nfchainpolicy $policy:ident) => {
+        <nftables::types::NfChainPolicy as std::str::FromStr>::from_str(stringify!($policy))
+            .expect("Could not match NfChainPolicy")
+    };
+    (@some_nfchainpolicy) => { None };
+    (@some_nfchainpolicy null) => { None };
+    (@some_nfchainpolicy $policy:ident) => { Some(nft!(@nfchainpolicy $policy)) };
 
     // Helper macro for creating an NfChainType from an identifier
-    (@chaintype $type:ident) => {
+    (@nfchaintype $type:ident) => {
         <nftables::types::NfChainType as std::str::FromStr>::from_str(stringify!($type))
             .expect("Could not match NfChainType")
     };
+    (@some_nfchaintype) => { None };
+    (@some_nfchaintype null) => { None };
+    (@some_nfchaintype $type:ident) => { Some(nft!(@nfchaintype $type)) };
 
     // Helper macro for creating an NfHook from an identifier
     (@nfhook $hook:ident) => {
@@ -15,6 +29,7 @@ macro_rules! nft {
             .expect("Could not match NfHook")
     };
     (@some_nfhook) => { None };
+    (@some_nfhook null) => { None };
     (@some_nfhook $hook:ident) => { Some(nft!(@nfhook $hook)) };
 
     // Helper macro for creating an NfFamily from an identifier
@@ -24,32 +39,32 @@ macro_rules! nft {
     };
 
     // Helper macro for converting an identifier to a String
-    (@name $name:ident) => {
-        stringify!($name).to_string()
+    (@to_str $str:ident) => {
+        stringify!($str).to_string()
     };
 
     // Macro arm for table
     (table $family:ident $name:ident) => {
         nftables::schema::Table {
             family: nft!(@nffamily $family),
-            name: nft!(@name $name),
+            name: nft!(@to_str $name),
             handle: None,
         }
     };
 
     // Macro arm for chain
-    (chain $family:ident $table:ident $name:ident $( { type $type:ident hook $hook:ident priority $priority:literal ; } )? ) => {
+    (chain $family:ident $table:ident $name:ident $( { type $type:ident hook $hook:ident device $device:ident priority $priority:tt ; policy $policy:ident } )? ) => {
         nftables::schema::Chain {
             family: nft!(@nffamily $family),
-            table: nft!(@name $table),
-            name: nft!(@name $name),
+            table: nft!(@to_str $table),
+            name: nft!(@to_str $name),
             newname: None,
             handle: None,
-            _type: None, //$(Some(nft!(@chaintype $type)))?,
-            hook: nft!(@some_nfhook $($hook)?), // (Some(nft!(@nfhook $hook)))?,
+            _type: nft!(@some_nfchaintype $($type)?),
+            hook: nft!(@some_nfhook $($hook)?),
             prio: nft!(@some_or_none $($priority)?),
-            dev: None,
-            policy: None,
+            dev: nft!(@some_or_none $($device)?),
+            policy: nft!(@some_nfchainpolicy$($policy)?),
         }
     };
 
