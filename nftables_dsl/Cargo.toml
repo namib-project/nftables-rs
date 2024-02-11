@@ -1,0 +1,12 @@
+[package]
+name = "nftables_dsl"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "nftables_dsl"
+path = "src/lib.rs"
+#proc-macro = true
+
+[dependencies]
+nftables = { path = "../nftables" }

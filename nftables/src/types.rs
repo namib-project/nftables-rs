@@ -1,10 +1,12 @@
 use serde::{Deserialize, Serialize};
+use strum_macros::EnumString;
 
 /// Families in nftables.
 ///
 /// See <https://wiki.nftables.org/wiki-nftables/index.php/Nftables_families>.
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, EnumString)]
 #[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
 pub enum NfFamily {
     IP,
     IP6,
@@ -14,8 +16,9 @@ pub enum NfFamily {
     NetDev,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, EnumString)]
 #[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
 /// Represents the type of a Chain.
 pub enum NfChainType {
     Filter,
@@ -31,8 +34,9 @@ pub enum NfChainPolicy {
     Drop,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, EnumString)]
 #[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
 /// Represents a netfilter hook.
 ///
 /// See <https://wiki.nftables.org/wiki-nftables/index.php/Netfilter_hooks>.
