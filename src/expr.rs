@@ -34,8 +34,7 @@ pub enum NamedExpression {
     Prefix(Prefix),
 
     Payload(Payload),
-    #[serde(rename = "payload")]
-    PayloadRaw(PayloadRaw),
+
     Exthdr(Exthdr),
     #[serde(rename = "tcp option")]
     TcpOption(TcpOption),
@@ -92,20 +91,25 @@ pub struct Range {
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
-#[serde(rename = "payload")]
-/// Construct a payload expression, i.e. a reference to a certain part of packet data.
-/// Creates a raw payload expression to point at a random number (`len`) of bytes at a certain offset (`offset`) from a given reference point (`base`).
-pub struct PayloadRaw {
-    base: PayloadBase,
-    offset: u32,
-    len: u32,
+#[serde(untagged)]
+pub enum Payload {
+    PayloadField(PayloadField),
+    PayloadRaw(PayloadRaw),
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
-#[serde(rename = "payload")]
+/// Construct a payload expression, i.e. a reference to a certain part of packet data.
+/// Creates a raw payload expression to point at a random number (`len`) of bytes at a certain offset (`offset`) from a given reference point (`base`).
+pub struct PayloadRaw {
+    pub base: PayloadBase,
+    pub offset: u32,
+    pub len: u32,
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 /// Construct a payload expression, i.e. a reference to a certain part of packet data.
 /// Allows to reference a field by name (`field`) in a named packet header (`protocol`).
-pub struct Payload {
+pub struct PayloadField {
     pub protocol: String,
     pub field: String,
 }

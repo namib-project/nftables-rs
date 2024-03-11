@@ -101,10 +101,12 @@ fn test_parsing_of_queue_without_flags() {
             chain: "test_chain".to_string(),
             expr: vec![
                 Statement::Match(Match {
-                    left: Expression::Named(NamedExpression::Payload(nftables::expr::Payload {
-                        protocol: "udp".to_string(),
-                        field: "dport".to_string(),
-                    })),
+                    left: Expression::Named(NamedExpression::Payload(
+                        nftables::expr::Payload::PayloadField(nftables::expr::PayloadField {
+                            protocol: "udp".to_string(),
+                            field: "dport".to_string(),
+                        }),
+                    )),
                     right: Expression::Number(20000),
                     op: Operator::EQ,
                 }),
@@ -164,4 +166,84 @@ fn test_queue_json_serialisation() {
 
     let expected_json = String::from(r#"{"queue":{"num":0}}"#);
     assert_eq!(expected_json, serde_json::to_string(&queue).unwrap());
+}
+
+#[test]
+fn test_parse_payload() {
+    let expected = Nftables {
+        objects: vec![NfObject::ListObject(NfListObject::Rule(Rule {
+            family: NfFamily::IP,
+            table: "test_table".to_string(),
+            chain: "test_chain".to_string(),
+            expr: vec![
+                Statement::Match(Match {
+                    left: Expression::Named(NamedExpression::Payload(
+                        nftables::expr::Payload::PayloadField(nftables::expr::PayloadField {
+                            protocol: "udp".to_string(),
+                            field: "dport".to_string(),
+                        }),
+                    )),
+                    right: Expression::Number(20000),
+                    op: Operator::EQ,
+                }),
+                Statement::Match(Match {
+                    left: Expression::Named(NamedExpression::Payload(
+                        nftables::expr::Payload::PayloadRaw(nftables::expr::PayloadRaw {
+                            base: nftables::expr::PayloadBase::TH,
+                            offset: 10,
+                            len: 4,
+                        }),
+                    )),
+                    right: Expression::Number(20),
+                    op: Operator::EQ,
+                }),
+            ],
+            handle: Some(2),
+            index: None,
+            comment: None,
+        }))],
+    };
+
+    let json = json!({
+        "nftables": [
+            {
+                "rule": {
+                    "family": "ip",
+                    "table": "test_table",
+                    "chain": "test_chain",
+                    "handle": 2,
+                    "expr": [
+                    {
+                        "match": {
+                            "op": "==",
+                            "left": {
+                                "payload": {
+                                    "protocol": "udp",
+                                    "field": "dport"
+                                }
+                            },
+                            "right": 20000
+                        }
+                    },
+                    {
+                        "match": {
+                            "op": "==",
+                            "left": {
+                                "payload": {
+                                    "base": "th",
+                                    "offset": 10,
+                                    "len": 4
+                                }
+                            },
+                            "right": 20
+                        }
+                    },
+                ]
+                }
+            }
+        ]
+    });
+
+    let parsed: Nftables = serde_json::from_value(json).unwrap();
+    assert_eq!(expected, parsed);
 }
