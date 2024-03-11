@@ -115,7 +115,7 @@ pub struct PayloadField {
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
-#[serde(rename = "payload", rename_all = "lowercase")]
+#[serde(rename_all = "lowercase")]
 /// Represents a protocol layer for `payload` references.
 pub enum PayloadBase {
     /// Link layer, for example the Ethernet header
@@ -124,6 +124,8 @@ pub enum PayloadBase {
     NH,
     /// Transport Header, for example TCP
     TH,
+    /// Inner Header / Payload, i.e. after the L4 transport level header
+    IH,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
