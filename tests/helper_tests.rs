@@ -6,9 +6,11 @@ use nftables::{
     helper::{self, NftablesError},
     schema, types,
 };
+use serial_test::serial;
 
 #[test]
 #[ignore]
+#[serial]
 /// Reads current ruleset from nftables and reads it to `Nftables` Rust struct.
 fn test_list_ruleset() {
     flush_ruleset().expect("failed to flush ruleset");
@@ -27,20 +29,30 @@ fn test_list_ruleset_invalid_program() {
 
 #[test]
 #[ignore]
+#[serial]
 /// Applies an example ruleset to nftables, lists single map/set through nft args.
 fn test_nft_args_list_map_set() {
     flush_ruleset().expect("failed to flush ruleset");
     let ruleset = example_ruleset(false);
     nftables::helper::apply_ruleset(&ruleset, None, None).unwrap();
     // nft should return two list object: metainfo and the set/map
-    let applied = helper::get_current_ruleset(None, Some(vec!["list", "map", "ip", "test-table-01", "test_map"])).unwrap();
+    let applied = helper::get_current_ruleset(
+        None,
+        Some(vec!["list", "map", "ip", "test-table-01", "test_map"]),
+    )
+    .unwrap();
     assert_eq!(2, applied.objects.len());
-    let applied = helper::get_current_ruleset(None, Some(vec!["list", "set", "ip", "test-table-01", "test_set"])).unwrap();
+    let applied = helper::get_current_ruleset(
+        None,
+        Some(vec!["list", "set", "ip", "test-table-01", "test_set"]),
+    )
+    .unwrap();
     assert_eq!(2, applied.objects.len());
 }
 
 #[test]
 #[ignore]
+#[serial]
 /// Applies a ruleset to nftables.
 fn test_apply_ruleset() {
     flush_ruleset().expect("failed to flush ruleset");
@@ -50,6 +62,7 @@ fn test_apply_ruleset() {
 
 #[test]
 #[ignore]
+#[serial]
 /// Attempts to delete an unknown table, expecting an error.
 fn test_remove_unknown_table() {
     flush_ruleset().expect("failed to flush ruleset");

@@ -22,4 +22,5 @@ strum = "0.25"
 strum_macros = "0.25"
 thiserror = "1.0"
 
-[build-dependencies]
+[dev-dependencies]
+serial_test = "3.0.0"
