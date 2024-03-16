@@ -43,22 +43,21 @@ pub fn get_current_ruleset_raw(
     args: Option<Vec<&str>>,
 ) -> Result<String, NftablesError> {
     let mut nft_cmd = get_command(program);
-    let default_args = ["-j", "list", "ruleset"];
-    let args: Vec<&str> = match args {
-        Some(mut args) => {
-            args.extend_from_slice(&default_args);
-            args
-        }
-        None => default_args.to_vec(),
+    let default_args = ["list", "ruleset"];
+    let args = match &args {
+        Some(args) => args.as_slice(),
+        None => &default_args,
     };
     let program = nft_cmd.get_program().to_str().unwrap().to_string();
-    let process_result = nft_cmd
-        .args(args)
-        .output()
-        .map_err(|e| NftablesError::NftExecution {
-            inner: e,
-            program: program.clone(),
-        })?;
+    let process_result =
+        nft_cmd
+            .arg("-j")
+            .args(args)
+            .output()
+            .map_err(|e| NftablesError::NftExecution {
+                inner: e,
+                program: program.clone(),
+            })?;
 
     let stdout = read_output(&nft_cmd, process_result.stdout)?;
 
