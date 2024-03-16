@@ -69,12 +69,14 @@ pub enum ResetObject {
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
+/// Empty contents in given object, e.g. remove all chains from given table or remove all elements from given set.
 pub enum FlushObject {
     Table(Table),
     Chain(Chain),
     Set(Set),
     Map(Map),
     Meter(Meter),
+    Ruleset(Option<Ruleset>),
 }
 
 // Ruleset Elements
@@ -384,6 +386,9 @@ pub struct Meter {
     pub key: Expression,
     pub stmt: Statement,
 }
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+pub struct Ruleset {}
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 pub struct MetainfoObject {
