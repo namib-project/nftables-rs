@@ -26,5 +26,5 @@ jobs:
     - name: Run tests
       run: cargo test --verbose
     - name: Run tests (rootful)
-      run: sudo -E env "PATH=$PATH" $(which cargo) test --verbose -- --ignored
+      run: sudo -E env "PATH=$PATH" bash tests/run_nft_tests.sh
 

@@ -1,3 +1,5 @@
+use std::vec;
+
 use nftables::{
     batch::Batch,
     expr,
@@ -9,14 +11,40 @@ use nftables::{
 #[ignore]
 /// Reads current ruleset from nftables and reads it to `Nftables` Rust struct.
 fn test_list_ruleset() {
+    flush_ruleset().expect("failed to flush ruleset");
     helper::get_current_ruleset(None, None).unwrap();
+}
+
+#[test]
+#[ignore]
+/// Attempts to read current ruleset from nftables using non-existing nft binary.
+fn test_list_ruleset_invalid_program() {
+    let result = helper::get_current_ruleset(Some("/dev/null/nft"), None);
+    let err =
+        result.expect_err("getting the current ruleset should fail with non-existing nft binary");
+    assert!(matches!(err, NftablesError::NftExecution { .. }));
+}
+
+#[test]
+#[ignore]
+/// Applies an example ruleset to nftables, lists single map/set through nft args.
+fn test_nft_args_list_map_set() {
+    flush_ruleset().expect("failed to flush ruleset");
+    let ruleset = example_ruleset(false);
+    nftables::helper::apply_ruleset(&ruleset, None, None).unwrap();
+    // nft should return two list object: metainfo and the set/map
+    let applied = helper::get_current_ruleset(None, Some(vec!["list", "map", "ip", "test-table-01", "test_map"])).unwrap();
+    assert_eq!(2, applied.objects.len());
+    let applied = helper::get_current_ruleset(None, Some(vec!["list", "set", "ip", "test-table-01", "test_set"])).unwrap();
+    assert_eq!(2, applied.objects.len());
 }
 
 #[test]
 #[ignore]
 /// Applies a ruleset to nftables.
 fn test_apply_ruleset() {
-    let ruleset = example_ruleset();
+    flush_ruleset().expect("failed to flush ruleset");
+    let ruleset = example_ruleset(true);
     nftables::helper::apply_ruleset(&ruleset, None, None).unwrap();
 }
 
@@ -24,6 +52,7 @@ fn test_apply_ruleset() {
 #[ignore]
 /// Attempts to delete an unknown table, expecting an error.
 fn test_remove_unknown_table() {
+    flush_ruleset().expect("failed to flush ruleset");
     let mut batch = Batch::new();
     batch.delete(schema::NfListObject::Table(schema::Table::new(
         types::NfFamily::IP6,
@@ -36,14 +65,15 @@ fn test_remove_unknown_table() {
     assert!(matches!(err, NftablesError::NftFailed { .. }));
 }
 
-fn example_ruleset() -> schema::Nftables {
+fn example_ruleset(with_undo: bool) -> schema::Nftables {
     let mut batch = Batch::new();
+    // create table "test-table-01"
     let table_name = "test-table-01".to_string();
     batch.add(schema::NfListObject::Table(schema::Table::new(
         types::NfFamily::IP,
         table_name.clone(),
     )));
-    // create named set
+    // create named set "test_set"
     let set_name = "test_set".to_string();
     batch.add(schema::NfListObject::Set(schema::Set {
         family: types::NfFamily::IP,
@@ -59,6 +89,7 @@ fn example_ruleset() -> schema::Nftables {
         size: None,
         comment: None,
     }));
+    // create named map "test_map"
     let map_name = "test_map".to_string();
     let map_type = "verdict".to_string();
     batch.add(schema::NfListObject::Map(schema::Map {
@@ -86,9 +117,22 @@ fn example_ruleset() -> schema::Nftables {
             expr::Expression::String("127.0.0.2".to_string()),
         ],
     }));
-    batch.delete(schema::NfListObject::Table(schema::Table::new(
-        types::NfFamily::IP,
-        "test-table-01".to_string(),
-    )));
+    if with_undo {
+        batch.delete(schema::NfListObject::Table(schema::Table::new(
+            types::NfFamily::IP,
+            "test-table-01".to_string(),
+        )));
+    }
     batch.to_nftables()
+}
+
+fn get_flush_ruleset() -> schema::Nftables {
+    let mut batch = Batch::new();
+    batch.add_cmd(schema::NfCmd::Flush(schema::FlushObject::Ruleset(None)));
+    batch.to_nftables()
+}
+
+fn flush_ruleset() -> Result<(), NftablesError> {
+    let ruleset = get_flush_ruleset();
+    nftables::helper::apply_ruleset(&ruleset, None, None)
 }
