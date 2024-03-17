@@ -10,8 +10,9 @@ readme = "README.md"
 keywords = ["nftables", "netfilter", "firewall"]
 categories = ["os", "network-programming"]
 exclude = [
-    ".gitlab/*",
     ".github/*",
+    "cliff.toml",
+    "release-plz.toml",
 ]
 
 [dependencies]
