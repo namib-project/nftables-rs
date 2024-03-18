@@ -42,6 +42,7 @@ pub enum NfListObject {
     CTTimeout(CTTimeout),
     #[serde(rename = "ct expectation")]
     CTExpectation(CTExpectation),
+    SynProxy(SynProxy),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
@@ -448,4 +449,32 @@ pub struct CTExpectation {
     pub timeout: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<u32>,
+}
+
+/// [SynProxy] intercepts new TCP connections and handles the initial 3-way handshake using
+/// syncookies instead of conntrack to establish the connection.
+///
+/// Named SynProxy requires **nftables 0.9.3 or newer**.
+///
+/// [SynProxy]: https://wiki.nftables.org/wiki-nftables/index.php/Synproxy
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+pub struct SynProxy {
+    /// The table’s family.
+    pub family: NfFamily,
+    /// The table’s name.
+    pub table: String,
+    /// The synproxy's name.
+    pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// The synproxy's handle. For input, it is used by the [delete command][NfCmd::Delete] only.
+    pub handle: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// The maximum segment size (must match your backend server).
+    pub mss: Option<u16>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// The window scale (must match your backend server).
+    pub wscale: Option<u8>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// The synproxy's [flags][crate::types::SynProxyFlag].
+    pub flags: Option<HashSet<SynProxyFlag>>,
 }
