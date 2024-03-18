@@ -42,6 +42,7 @@ pub enum NfListObject {
     CTTimeout(CTTimeout),
     #[serde(rename = "ct expectation")]
     CTExpectation(CTExpectation),
+    SynProxy(SynProxy),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
@@ -434,4 +435,21 @@ pub struct CTExpectation {
     pub timeout: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<u32>,
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+pub struct SynProxy {
+    pub family: NfFamily,
+    pub table: String,
+    pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub handle: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// maximum segment size (must match your backend server)
+    pub mss: Option<u16>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// window scale (must match your backend server)
+    pub wscale: Option<u8>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub flags: Option<HashSet<SynProxyFlag>>,
 }

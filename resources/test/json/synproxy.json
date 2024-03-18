@@ -1,0 +1,299 @@
+{
+  "nftables": [
+    {
+      "metainfo": {
+        "version": "1.0.6",
+        "release_name": "Lester Gooch #5",
+        "json_schema_version": 1
+      }
+    },
+    {
+      "table": {
+        "family": "ip",
+        "name": "synproxy_anonymous",
+        "handle": 1
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "synproxy_anonymous",
+        "name": "PREROUTING",
+        "handle": 1,
+        "type": "filter",
+        "hook": "prerouting",
+        "prio": -300,
+        "policy": "accept"
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "synproxy_anonymous",
+        "name": "INPUT",
+        "handle": 2,
+        "type": "filter",
+        "hook": "input",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "synproxy_anonymous",
+        "chain": "PREROUTING",
+        "handle": 3,
+        "expr": [
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "dport"
+                }
+              },
+              "right": 8080
+            }
+          },
+          {
+            "match": {
+              "op": "in",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "flags"
+                }
+              },
+              "right": "syn"
+            }
+          },
+          {
+            "notrack": null
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "synproxy_anonymous",
+        "chain": "INPUT",
+        "handle": 4,
+        "expr": [
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "dport"
+                }
+              },
+              "right": 8080
+            }
+          },
+          {
+            "match": {
+              "op": "in",
+              "left": {
+                "ct": {
+                  "key": "state"
+                }
+              },
+              "right": [
+                "invalid",
+                "untracked"
+              ]
+            }
+          },
+          {
+            "synproxy": {
+              "mss": 1460,
+              "wscale": 7,
+              "flags": [
+                "timestamp",
+                "sack-perm"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "synproxy_anonymous",
+        "chain": "INPUT",
+        "handle": 5,
+        "expr": [
+          {
+            "match": {
+              "op": "in",
+              "left": {
+                "ct": {
+                  "key": "state"
+                }
+              },
+              "right": "invalid"
+            }
+          },
+          {
+            "drop": null
+          }
+        ]
+      }
+    },
+    {
+      "table": {
+        "family": "ip",
+        "name": "synproxy_named",
+        "handle": 2
+      }
+    },
+    {
+      "synproxy": {
+        "family": "ip",
+        "name": "synproxy_named_1",
+        "table": "synproxy_named",
+        "handle": 3,
+        "mss": 1460,
+        "wscale": 7,
+        "flags": [
+          "timestamp",
+          "sack-perm"
+        ]
+      }
+    },
+    {
+      "synproxy": {
+        "family": "ip",
+        "name": "synproxy_named_2",
+        "table": "synproxy_named",
+        "handle": 4,
+        "mss": 1460,
+        "wscale": 5
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "synproxy_named",
+        "name": "PREROUTING",
+        "handle": 1,
+        "type": "filter",
+        "hook": "prerouting",
+        "prio": -300,
+        "policy": "accept"
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "synproxy_named",
+        "name": "FORWARD",
+        "handle": 2,
+        "type": "filter",
+        "hook": "forward",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "synproxy_named",
+        "chain": "PREROUTING",
+        "handle": 5,
+        "expr": [
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "dport"
+                }
+              },
+              "right": 8080
+            }
+          },
+          {
+            "match": {
+              "op": "in",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "flags"
+                }
+              },
+              "right": "syn"
+            }
+          },
+          {
+            "notrack": null
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "synproxy_named",
+        "chain": "FORWARD",
+        "handle": 7,
+        "expr": [
+          {
+            "match": {
+              "op": "in",
+              "left": {
+                "ct": {
+                  "key": "state"
+                }
+              },
+              "right": [
+                "invalid",
+                "untracked"
+              ]
+            }
+          },
+          {
+            "synproxy": {
+              "map": {
+                "key": {
+                  "payload": {
+                    "protocol": "ip",
+                    "field": "saddr"
+                  }
+                },
+                "data": {
+                  "set": [
+                    [
+                      {
+                        "prefix": {
+                          "addr": "192.168.1.0",
+                          "len": 24
+                        }
+                      },
+                      "synproxy_named_1"
+                    ],
+                    [
+                      {
+                        "prefix": {
+                          "addr": "192.168.2.0",
+                          "len": 24
+                        }
+                      },
+                      "synproxy_named_2"
+                    ]
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
