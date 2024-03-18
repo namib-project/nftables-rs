@@ -1,0 +1,41 @@
+table ip synproxy_anonymous {
+
+    chain PREROUTING {
+        type filter hook prerouting priority raw; policy accept;
+        tcp dport 8080 tcp flags syn notrack
+    }
+
+    chain INPUT {
+        type filter hook input priority filter; policy accept;
+        tcp dport 8080 ct state invalid,untracked synproxy mss 1460 wscale 7 timestamp sack-perm
+        ct state invalid drop
+    }
+}
+
+table ip synproxy_named {
+
+    synproxy synproxy_named_1 {
+        mss 1460
+        wscale 7
+        timestamp sack-perm
+    }
+
+    synproxy synproxy_named_2 {
+        mss 1460
+        wscale 5
+    }
+
+    chain PREROUTING {
+        type filter hook prerouting priority raw; policy accept;
+        tcp dport 8080 tcp flags syn notrack
+    }
+
+    chain FORWARD {
+        type filter hook forward priority filter; policy accept;
+
+        ct state invalid,untracked synproxy name ip saddr map {
+            192.168.1.0/24 : "synproxy_named_1", 
+            192.168.2.0/24 : "synproxy_named_2",
+        }
+    }
+}
