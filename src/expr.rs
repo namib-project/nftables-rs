@@ -114,7 +114,7 @@ pub struct PayloadField {
     pub field: String,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents a protocol layer for `payload` references.
 pub enum PayloadBase {
@@ -161,7 +161,7 @@ pub struct Meta {
     pub key: MetaKey,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents a `meta` key for packet meta data.
 pub enum MetaKey {
@@ -203,7 +203,7 @@ pub struct RT {
     pub family: Option<RTFamily>,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents a key to reference to packet routing data.
 pub enum RTKey {
@@ -212,7 +212,7 @@ pub enum RTKey {
     MTU,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents a protocol family for use by the `ct` expression.
 pub enum RTFamily {
@@ -231,7 +231,7 @@ pub struct CT {
     pub dir: Option<CTDir>,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents a protocol family for use by the `ct` expression.
 pub enum CTFamily {
@@ -239,7 +239,7 @@ pub enum CTFamily {
     IP6,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents a direction for use by the `ct` expression.
 pub enum CTDir {
@@ -258,7 +258,7 @@ pub struct Numgen {
     pub offset: Option<u32>,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents a number generator mode.
 pub enum NgMode {
@@ -296,7 +296,7 @@ pub struct Fib {
     pub flags: HashSet<FibFlag>,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents which data is queried by `fib` lookup.
 pub enum FibResult {
@@ -305,7 +305,7 @@ pub enum FibResult {
     Type,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize, Hash)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Serialize, Deserialize, Hash)]
 #[serde(rename_all = "lowercase")]
 /// Represents flags for `fib` lookup.
 pub enum FibFlag {
@@ -388,7 +388,7 @@ pub struct Osf {
     pub ttl: OsfTtl,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// TTL check mode for `osf`.
 pub enum OsfTtl {

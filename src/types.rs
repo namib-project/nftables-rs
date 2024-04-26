@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 /// Families in nftables.
 ///
 /// See <https://wiki.nftables.org/wiki-nftables/index.php/Nftables_families>.
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum NfFamily {
     IP,
@@ -14,7 +14,7 @@ pub enum NfFamily {
     NetDev,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents the type of a Chain.
 pub enum NfChainType {
@@ -23,7 +23,7 @@ pub enum NfChainType {
     NAT,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents the policy of a Chain.
 pub enum NfChainPolicy {
@@ -31,7 +31,7 @@ pub enum NfChainPolicy {
     Drop,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents a netfilter hook.
 ///
@@ -46,7 +46,7 @@ pub enum NfHook {
     Egress,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Represents a conntrack helper protocol.
 pub enum CTHProto {
@@ -60,7 +60,7 @@ pub enum CTHProto {
     Generic,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 pub enum RejectCode {
     #[serde(rename = "admin-prohibited")]
     /// Host administratively prohibited (ICMPX, ICMP, ICMPv6)
