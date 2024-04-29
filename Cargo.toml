@@ -25,4 +25,4 @@ strum_macros = "0.26.2"
 thiserror = "1.0"
 
 [dev-dependencies]
-serial_test = "3.0.0"
+serial_test = "3.1.1"
