@@ -235,7 +235,7 @@ pub enum SetTypeValue {
     Concatenated(Vec<SetType>),
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, EnumString)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Serialize, Deserialize, EnumString)]
 #[serde(rename_all = "lowercase")]
 /// Describes a set’s datatype.
 pub enum SetType {
@@ -263,7 +263,7 @@ pub enum SetType {
     Ifname,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Describes a set’s policy.
 pub enum SetPolicy {
@@ -271,7 +271,7 @@ pub enum SetPolicy {
     Memory,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, Hash)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize, Hash)]
 #[serde(rename_all = "lowercase")]
 /// Describes a set’s flags.
 pub enum SetFlag {
@@ -281,7 +281,7 @@ pub enum SetFlag {
     Dynamic,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Describes an operator on set.
 pub enum SetOp {
@@ -373,7 +373,7 @@ pub struct Limit {
     pub inv: Option<bool>,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum LimitUnit {
     Packets,

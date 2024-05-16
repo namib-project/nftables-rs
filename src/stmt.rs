@@ -187,7 +187,7 @@ pub struct FWD {
     pub addr: Option<Expression>,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Protocol family for `FWD`.
 pub enum FWDFamily {
@@ -223,7 +223,7 @@ pub struct NAT {
     pub flags: Option<HashSet<NATFlag>>,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Protocol family for `NAT`.
 pub enum NATFamily {
@@ -231,7 +231,7 @@ pub enum NATFamily {
     IP6,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize, Hash)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Serialize, Deserialize, Hash)]
 #[serde(rename_all = "lowercase")]
 /// Flags for `NAT`.
 pub enum NATFlag {
@@ -258,7 +258,7 @@ impl Reject {
     }
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Types of `Reject`.
 pub enum RejectType {
@@ -280,7 +280,7 @@ pub struct Set {
     pub set: String,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Operators on `Set`.
 pub enum SetOp {
@@ -334,7 +334,7 @@ impl Log {
     }
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 /// Levels of `Log`.
 pub enum LogLevel {
@@ -349,7 +349,7 @@ pub enum LogLevel {
     Audit,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize, Hash, EnumString)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Serialize, Deserialize, Hash, EnumString)]
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 /// Flags of `Log`.
@@ -389,7 +389,7 @@ pub struct Queue {
     pub flags: Option<HashSet<QueueFlag>>,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize, Hash)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Serialize, Deserialize, Hash)]
 #[serde(rename_all = "lowercase")]
 /// Flags of `Queue`.
 pub enum QueueFlag {
@@ -420,7 +420,7 @@ pub struct CTCount {
     pub inv: Option<bool>,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 /// Represents an operator for `Match`.
 pub enum Operator {
     #[serde(rename = "&")]
