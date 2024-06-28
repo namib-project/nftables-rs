@@ -75,6 +75,8 @@ pub enum Statement {
     /// This represents an xt statement from xtables compat interface.
     /// Sadly, at this point, it is not possible to provide any further information about its content.
     XT(Option<serde_json::Value>),
+
+    TProxy(TProxy),
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
@@ -418,6 +420,16 @@ pub struct CTCount {
     #[serde(skip_serializing_if = "Option::is_none")]
     /// If `true`, match if `val` was exceeded. If omitted, defaults to `false`.
     pub inv: Option<bool>,
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub struct TProxy {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub family: Option<String>,
+    pub port: u16,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub addr: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
