@@ -1,0 +1,16 @@
+#!/sbin/nft -f
+
+flush ruleset
+
+table inet filter {
+
+	chain tproxy_ipv4 {
+	     meta l4proto tcp tproxy ip to 127.0.0.1:12345
+	     meta l4proto tcp tproxy ip to :12345
+	}
+
+	chain tproxy_ipv6 {
+	     meta l4proto tcp tproxy ip6 to [::1]:12345
+	     meta l4proto tcp tproxy ip6 to :12345
+	}
+}
