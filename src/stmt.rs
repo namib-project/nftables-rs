@@ -76,6 +76,7 @@ pub enum Statement {
     /// Sadly, at this point, it is not possible to provide any further information about its content.
     XT(Option<serde_json::Value>),
 
+    /// Redirects the packet to a local socket without changing the packet header in any way.
     TProxy(TProxy),
 }
 
@@ -424,6 +425,7 @@ pub struct CTCount {
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
+/// Redirects the packet to a local socket without changing the packet header in any way.
 pub struct TProxy {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub family: Option<String>,
