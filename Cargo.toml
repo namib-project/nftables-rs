@@ -17,7 +17,7 @@ exclude = [
 ]
 
 [dependencies]
-serde = { version = "1.0.204", features = ["derive"] }
+serde = { version = "1.0.205", features = ["derive"] }
 serde_json = { version = "1.0.122" }
 serde_path_to_error = "0.1"
 strum = "0.26.3"
