@@ -2,8 +2,8 @@
   "nftables": [
     {
       "metainfo": {
-        "version": "0.9.8",
-        "release_name": "E.D.S.",
+        "version": "1.0.9",
+        "release_name": "Old Doc Yak #3",
         "json_schema_version": 1
       }
     },
@@ -11,7 +11,7 @@
       "table": {
         "family": "ip",
         "name": "filter",
-        "handle": 59
+        "handle": 1
       }
     },
     {
@@ -36,6 +36,18 @@
         "hook": "input",
         "prio": 0,
         "policy": "accept"
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "filter",
+        "name": "forward",
+        "handle": 3,
+        "type": "filter",
+        "hook": "forward",
+        "prio": 0,
+        "policy": "drop"
       }
     },
     {
@@ -84,18 +96,6 @@
             "drop": null
           }
         ]
-      }
-    },
-    {
-      "chain": {
-        "family": "ip",
-        "table": "filter",
-        "name": "forward",
-        "handle": 3,
-        "type": "filter",
-        "hook": "forward",
-        "prio": 0,
-        "policy": "drop"
       }
     },
     {

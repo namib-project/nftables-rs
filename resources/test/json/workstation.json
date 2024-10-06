@@ -2,8 +2,8 @@
   "nftables": [
     {
       "metainfo": {
-        "version": "0.9.8",
-        "release_name": "E.D.S.",
+        "version": "1.0.9",
+        "release_name": "Old Doc Yak #3",
         "json_schema_version": 1
       }
     },
@@ -11,7 +11,7 @@
       "table": {
         "family": "ip",
         "name": "filter",
-        "handle": 63
+        "handle": 1
       }
     },
     {
@@ -27,11 +27,35 @@
       }
     },
     {
+      "chain": {
+        "family": "ip",
+        "table": "filter",
+        "name": "forward",
+        "handle": 2,
+        "type": "filter",
+        "hook": "forward",
+        "prio": 0,
+        "policy": "drop"
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "filter",
+        "name": "output",
+        "handle": 3,
+        "type": "filter",
+        "hook": "output",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
       "rule": {
         "family": "ip",
         "table": "filter",
         "chain": "input",
-        "handle": 5,
+        "handle": 4,
         "comment": "early drop of invalid packets",
         "expr": [
           {
@@ -248,18 +272,6 @@
       }
     },
     {
-      "chain": {
-        "family": "ip",
-        "table": "filter",
-        "name": "forward",
-        "handle": 2,
-        "type": "filter",
-        "hook": "forward",
-        "prio": 0,
-        "policy": "drop"
-      }
-    },
-    {
       "rule": {
         "family": "ip",
         "table": "filter",
@@ -274,18 +286,6 @@
             }
           }
         ]
-      }
-    },
-    {
-      "chain": {
-        "family": "ip",
-        "table": "filter",
-        "name": "output",
-        "handle": 3,
-        "type": "filter",
-        "hook": "output",
-        "prio": 0,
-        "policy": "accept"
       }
     },
     {
@@ -309,7 +309,7 @@
       "table": {
         "family": "ip6",
         "name": "filter",
-        "handle": 64
+        "handle": 2
       }
     },
     {
@@ -325,11 +325,35 @@
       }
     },
     {
+      "chain": {
+        "family": "ip6",
+        "table": "filter",
+        "name": "forward",
+        "handle": 2,
+        "type": "filter",
+        "hook": "forward",
+        "prio": 0,
+        "policy": "drop"
+      }
+    },
+    {
+      "chain": {
+        "family": "ip6",
+        "table": "filter",
+        "name": "output",
+        "handle": 3,
+        "type": "filter",
+        "hook": "output",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
       "rule": {
         "family": "ip6",
         "table": "filter",
         "chain": "input",
-        "handle": 5,
+        "handle": 4,
         "comment": "early drop of invalid packets",
         "expr": [
           {
@@ -541,18 +565,6 @@
       }
     },
     {
-      "chain": {
-        "family": "ip6",
-        "table": "filter",
-        "name": "forward",
-        "handle": 2,
-        "type": "filter",
-        "hook": "forward",
-        "prio": 0,
-        "policy": "drop"
-      }
-    },
-    {
       "rule": {
         "family": "ip6",
         "table": "filter",
@@ -567,18 +579,6 @@
             }
           }
         ]
-      }
-    },
-    {
-      "chain": {
-        "family": "ip6",
-        "table": "filter",
-        "name": "output",
-        "handle": 3,
-        "type": "filter",
-        "hook": "output",
-        "prio": 0,
-        "policy": "accept"
       }
     },
     {
