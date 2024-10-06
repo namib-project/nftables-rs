@@ -2,8 +2,8 @@
   "nftables": [
     {
       "metainfo": {
-        "version": "0.9.8",
-        "release_name": "E.D.S.",
+        "version": "1.0.9",
+        "release_name": "Old Doc Yak #3",
         "json_schema_version": 1
       }
     },
@@ -11,7 +11,7 @@
       "table": {
         "family": "ip",
         "name": "nat",
-        "handle": 61
+        "handle": 1
       }
     },
     {
@@ -22,6 +22,18 @@
         "handle": 1,
         "type": "nat",
         "hook": "prerouting",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "nat",
+        "name": "postrouting",
+        "handle": 2,
+        "type": "nat",
+        "hook": "postrouting",
         "prio": 0,
         "policy": "accept"
       }
@@ -67,22 +79,10 @@
       }
     },
     {
-      "chain": {
-        "family": "ip",
-        "table": "nat",
-        "name": "postrouting",
-        "handle": 2,
-        "type": "nat",
-        "hook": "postrouting",
-        "prio": 0,
-        "policy": "accept"
-      }
-    },
-    {
       "table": {
         "family": "inet",
         "name": "filter",
-        "handle": 62
+        "handle": 2
       }
     },
     {
@@ -111,11 +111,31 @@
       }
     },
     {
+      "chain": {
+        "family": "inet",
+        "table": "filter",
+        "name": "output",
+        "handle": 2,
+        "type": "filter",
+        "hook": "output",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
+      "chain": {
+        "family": "inet",
+        "table": "filter",
+        "name": "admin",
+        "handle": 3
+      }
+    },
+    {
       "rule": {
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 14,
+        "handle": 5,
         "expr": [
           {
             "match": {
@@ -140,7 +160,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 15,
+        "handle": 6,
         "expr": [
           {
             "match": {
@@ -167,7 +187,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 16,
+        "handle": 7,
         "expr": [
           {
             "match": {
@@ -191,7 +211,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 17,
+        "handle": 8,
         "expr": [
           {
             "match": {
@@ -232,7 +252,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 18,
+        "handle": 9,
         "expr": [
           {
             "match": {
@@ -245,20 +265,16 @@
                       "field": "flags"
                     }
                   },
-                  {
-                    "|": [
-                      "fin",
-                      "syn"
-                    ]
-                  }
+                  [
+                    "fin",
+                    "syn"
+                  ]
                 ]
               },
-              "right": {
-                "|": [
-                  "fin",
-                  "syn"
-                ]
-              }
+              "right": [
+                "fin",
+                "syn"
+              ]
             }
           },
           {
@@ -277,7 +293,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 19,
+        "handle": 10,
         "expr": [
           {
             "match": {
@@ -290,20 +306,16 @@
                       "field": "flags"
                     }
                   },
-                  {
-                    "|": [
-                      "syn",
-                      "rst"
-                    ]
-                  }
+                  [
+                    "syn",
+                    "rst"
+                  ]
                 ]
               },
-              "right": {
-                "|": [
-                  "syn",
-                  "rst"
-                ]
-              }
+              "right": [
+                "syn",
+                "rst"
+              ]
             }
           },
           {
@@ -322,7 +334,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 20,
+        "handle": 11,
         "expr": [
           {
             "match": {
@@ -382,7 +394,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 21,
+        "handle": 12,
         "expr": [
           {
             "match": {
@@ -395,45 +407,21 @@
                       "field": "flags"
                     }
                   },
-                  {
-                    "|": [
-                      {
-                        "|": [
-                          {
-                            "|": [
-                              {
-                                "|": [
-                                  {
-                                    "|": [
-                                      "fin",
-                                      "syn"
-                                    ]
-                                  },
-                                  "rst"
-                                ]
-                              },
-                              "psh"
-                            ]
-                          },
-                          "ack"
-                        ]
-                      },
-                      "urg"
-                    ]
-                  }
+                  [
+                    "fin",
+                    "syn",
+                    "rst",
+                    "psh",
+                    "ack",
+                    "urg"
+                  ]
                 ]
               },
-              "right": {
-                "|": [
-                  {
-                    "|": [
-                      "fin",
-                      "psh"
-                    ]
-                  },
-                  "urg"
-                ]
-              }
+              "right": [
+                "fin",
+                "psh",
+                "urg"
+              ]
             }
           },
           {
@@ -452,7 +440,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 22,
+        "handle": 13,
         "expr": [
           {
             "match": {
@@ -488,7 +476,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 23,
+        "handle": 15,
         "expr": [
           {
             "match": {
@@ -530,7 +518,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 24,
+        "handle": 17,
         "expr": [
           {
             "match": {
@@ -578,7 +566,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 25,
+        "handle": 19,
         "expr": [
           {
             "match": {
@@ -617,6 +605,7 @@
           {
             "limit": {
               "rate": 100,
+              "burst": 5,
               "per": "second"
             }
           },
@@ -631,7 +620,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 26,
+        "handle": 21,
         "expr": [
           {
             "match": {
@@ -667,6 +656,7 @@
           {
             "limit": {
               "rate": 100,
+              "burst": 5,
               "per": "second"
             }
           },
@@ -677,23 +667,11 @@
       }
     },
     {
-      "chain": {
-        "family": "inet",
-        "table": "filter",
-        "name": "output",
-        "handle": 2,
-        "type": "filter",
-        "hook": "output",
-        "prio": 0,
-        "policy": "accept"
-      }
-    },
-    {
       "rule": {
         "family": "inet",
         "table": "filter",
         "chain": "output",
-        "handle": 27,
+        "handle": 22,
         "expr": [
           {
             "match": {
@@ -720,7 +698,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "output",
-        "handle": 28,
+        "handle": 23,
         "expr": [
           {
             "match": {
@@ -744,7 +722,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "output",
-        "handle": 29,
+        "handle": 25,
         "expr": [
           {
             "match": {
@@ -786,7 +764,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "output",
-        "handle": 30,
+        "handle": 27,
         "expr": [
           {
             "match": {
@@ -828,7 +806,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "output",
-        "handle": 31,
+        "handle": 28,
         "expr": [
           {
             "match": {
@@ -853,7 +831,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "output",
-        "handle": 32,
+        "handle": 29,
         "expr": [
           {
             "match": {
@@ -878,7 +856,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "output",
-        "handle": 33,
+        "handle": 31,
         "expr": [
           {
             "match": {
@@ -907,11 +885,7 @@
                   "field": "daddr"
                 }
               },
-              "right": {
-                "set": [
-                  "127.0.0.1"
-                ]
-              }
+              "right": "127.0.0.1"
             }
           },
           {
@@ -930,7 +904,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "output",
-        "handle": 34,
+        "handle": 33,
         "expr": [
           {
             "match": {
@@ -971,7 +945,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "output",
-        "handle": 35,
+        "handle": 34,
         "expr": [
           {
             "match": {
@@ -1000,6 +974,7 @@
           {
             "limit": {
               "rate": 1,
+              "burst": 5,
               "per": "second"
             }
           },
@@ -1017,7 +992,7 @@
         "family": "inet",
         "table": "filter",
         "chain": "output",
-        "handle": 36,
+        "handle": 35,
         "expr": [
           {
             "log": {
@@ -1029,19 +1004,11 @@
       }
     },
     {
-      "chain": {
-        "family": "inet",
-        "table": "filter",
-        "name": "admin",
-        "handle": 3
-      }
-    },
-    {
       "rule": {
         "family": "inet",
         "table": "filter",
         "chain": "admin",
-        "handle": 37,
+        "handle": 36,
         "expr": [
           {
             "match": {

@@ -1,0 +1,150 @@
+{
+  "nftables": [
+    {
+      "metainfo": {
+        "version": "1.0.9",
+        "release_name": "Old Doc Yak #3",
+        "json_schema_version": 1
+      }
+    },
+    {
+      "table": {
+        "family": "inet",
+        "name": "named_counter_demo",
+        "handle": 1
+      }
+    },
+    {
+      "counter": {
+        "family": "inet",
+        "name": "cnt_http",
+        "table": "named_counter_demo",
+        "handle": 2,
+        "comment": "count both http and https packets",
+        "packets": 0,
+        "bytes": 0
+      }
+    },
+    {
+      "counter": {
+        "family": "inet",
+        "name": "cnt_smtp",
+        "table": "named_counter_demo",
+        "handle": 3,
+        "packets": 0,
+        "bytes": 0
+      }
+    },
+    {
+      "chain": {
+        "family": "inet",
+        "table": "named_counter_demo",
+        "name": "IN",
+        "handle": 1
+      }
+    },
+    {
+      "rule": {
+        "family": "inet",
+        "table": "named_counter_demo",
+        "chain": "IN",
+        "handle": 4,
+        "expr": [
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "dport"
+                }
+              },
+              "right": 21
+            }
+          },
+          {
+            "counter": {
+              "packets": 0,
+              "bytes": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "inet",
+        "table": "named_counter_demo",
+        "chain": "IN",
+        "handle": 5,
+        "expr": [
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "dport"
+                }
+              },
+              "right": 25
+            }
+          },
+          {
+            "counter": "cnt_smtp"
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "inet",
+        "table": "named_counter_demo",
+        "chain": "IN",
+        "handle": 6,
+        "expr": [
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "dport"
+                }
+              },
+              "right": 80
+            }
+          },
+          {
+            "counter": "cnt_http"
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "inet",
+        "table": "named_counter_demo",
+        "chain": "IN",
+        "handle": 7,
+        "expr": [
+          {
+            "match": {
+              "op": "==",
+              "left": {
+                "payload": {
+                  "protocol": "tcp",
+                  "field": "dport"
+                }
+              },
+              "right": 443
+            }
+          },
+          {
+            "counter": "cnt_http"
+          }
+        ]
+      }
+    }
+  ]
+}
