@@ -95,7 +95,7 @@ fn test_insert() {
 #[test]
 fn test_parsing_of_queue_without_flags() {
     let expected = Nftables {
-        objects: vec![NfObject::ListObject(NfListObject::Rule(Rule {
+        objects: vec![NfObject::ListObject(Box::new(NfListObject::Rule(Rule {
             family: NfFamily::IP,
             table: "test_table".to_string(),
             chain: "test_chain".to_string(),
@@ -118,7 +118,7 @@ fn test_parsing_of_queue_without_flags() {
             handle: Some(2),
             index: None,
             comment: None,
-        }))],
+        })))],
     };
 
     let json = json!({
@@ -171,7 +171,7 @@ fn test_queue_json_serialisation() {
 #[test]
 fn test_parse_payload() {
     let expected = Nftables {
-        objects: vec![NfObject::ListObject(NfListObject::Rule(Rule {
+        objects: vec![NfObject::ListObject(Box::new(NfListObject::Rule(Rule {
             family: NfFamily::IP,
             table: "test_table".to_string(),
             chain: "test_chain".to_string(),
@@ -201,7 +201,7 @@ fn test_parse_payload() {
             handle: Some(2),
             index: None,
             comment: None,
-        }))],
+        })))],
     };
 
     let json = json!({

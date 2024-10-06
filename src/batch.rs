@@ -38,7 +38,7 @@ impl Batch {
     /// Adds a list object (without a command) directly to Batch.
     /// This corresponds to the descriptive output format of `nft -j list ruleset`.
     pub fn add_obj(&mut self, obj: NfListObject) {
-        self.data.push(NfObject::ListObject(obj))
+        self.data.push(NfObject::ListObject(Box::new(obj)))
     }
 
     /// Adds all given objects to the batch.

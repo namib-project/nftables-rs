@@ -18,7 +18,7 @@ pub struct Nftables {
 pub enum NfObject {
     // OBJECTS
     CmdObject(NfCmd),
-    ListObject(NfListObject),
+    ListObject(Box<NfListObject>),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
