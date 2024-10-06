@@ -1,5 +1,5 @@
 use nftables::expr::{Expression, Meta, MetaKey, NamedExpression};
-use nftables::stmt::{Match, Operator, Queue, Statement};
+use nftables::stmt::{Counter, Match, Operator, Queue, Statement};
 use nftables::{schema::*, types::*};
 use serde_json::json;
 use std::fs::{self, File};
@@ -77,7 +77,7 @@ fn test_insert() {
                         right: Expression::String("wg_exit".to_string()),
                         op: Operator::EQ,
                     }),
-                    Statement::Counter(None),
+                    Statement::Counter(Counter::Anonymous(None)),
                     Statement::Accept(None),
                 ],
                 handle: None,

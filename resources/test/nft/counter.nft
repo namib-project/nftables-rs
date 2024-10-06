@@ -1,0 +1,17 @@
+table inet named_counter_demo {
+	counter cnt_http {
+		comment "count both http and https packets"
+		packets 0 bytes 0
+	}
+
+	counter cnt_smtp {
+		packets 0 bytes 0
+	}
+
+	chain IN {
+		tcp dport 21 counter
+		tcp dport 25 counter name "cnt_smtp"
+		tcp dport 80 counter name "cnt_http"
+		tcp dport 443 counter name "cnt_http"
+	}
+}
