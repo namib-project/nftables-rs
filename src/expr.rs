@@ -99,6 +99,7 @@ pub enum Payload {
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 /// Construct a payload expression, i.e. a reference to a certain part of packet data.
+///
 /// Creates a raw payload expression to point at a random number (`len`) of bytes at a certain offset (`offset`) from a given reference point (`base`).
 pub struct PayloadRaw {
     pub base: PayloadBase,

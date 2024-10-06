@@ -103,6 +103,7 @@ pub struct JumpTarget {
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 /// This matches the expression on left hand side (typically a packet header or packet meta info) with the expression on right hand side (typically a constant value).
+///
 /// If the statement evaluates to true, the next statement in this rule is considered.
 /// If not, processing continues with the next rule in the same chain.
 pub struct Match {
