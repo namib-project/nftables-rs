@@ -17,12 +17,12 @@ exclude = [
 ]
 
 [dependencies]
-serde = { version = "1.0.204", features = ["derive"] }
-serde_json = { version = "1.0.124" }
+serde = { version = "1.0.210", features = ["derive"] }
+serde_json = { version = "1.0.128" }
 serde_path_to_error = "0.1"
 strum = "0.26.3"
 strum_macros = "0.26.4"
-thiserror = "1.0"
+thiserror = "1.0.64"
 
 [dev-dependencies]
 serial_test = "3.1.0"
