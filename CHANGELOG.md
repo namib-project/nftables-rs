@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.0](https://github.com/namib-project/nftables-rs/compare/v0.4.1...v0.5.0)
+
+### ⛰️ Features
+
+- *(stmt)* Implement flow statement - ([4e221d7](https://github.com/namib-project/nftables-rs/commit/4e221d76daf4a9ae303feea858e8d6cd1cd76fcc))
+
+### 🐛 Bug Fixes
+
+- *(stmt)* [**breaking**] Fix named counter - ([9f109c5](https://github.com/namib-project/nftables-rs/commit/9f109c51e4b657acf1194e4342f175b0394d2cd8))
+- Add doc comment and trait derive to counters - ([617b071](https://github.com/namib-project/nftables-rs/commit/617b071330960cc8092ded5fcbaf91c0579e35d1))
+- [**breaking**] Store NfListObjects in heap - ([51ccf10](https://github.com/namib-project/nftables-rs/commit/51ccf106dac1b810eec6d61af602284d594c440a))
+
+### 📚 Documentation
+
+- Fix long doc comments in expr, stmt - ([290c5bb](https://github.com/namib-project/nftables-rs/commit/290c5bbb0c3890c0fa94b915e27b1d26b48f5042))
+- Add doc comments for tproxy - ([e13a5ed](https://github.com/namib-project/nftables-rs/commit/e13a5ed90d9dcc9475e66e64ad0dc29a7bc71514))
+
+### 🧪 Testing
+
+- *(stmt)* Add serialization test for flow, flowtable - ([1d8f865](https://github.com/namib-project/nftables-rs/commit/1d8f865ed4f0b0fc131dc5cf499788f451269ad4))
+- Re-convert json data from nftables files - ([1ca5421](https://github.com/namib-project/nftables-rs/commit/1ca5421807e4663087cdcf5801ead27b74eb6b72))
+
+
 ## [0.4.1] - 2024-05-27
 
 ### ⚙️ Miscellaneous Tasks
