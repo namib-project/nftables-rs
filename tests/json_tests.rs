@@ -1,5 +1,5 @@
-use nftables::expr::{Expression, Meta, MetaKey, NamedExpression};
-use nftables::stmt::{Counter, Match, Operator, Queue, Statement};
+use nftables::expr::{self, Expression, Meta, MetaKey, NamedExpression};
+use nftables::stmt::{self, Counter, Match, Operator, Queue, Statement};
 use nftables::{schema::*, types::*};
 use serde_json::json;
 use std::fs::{self, File};
@@ -48,6 +48,70 @@ fn test_chain_table_rule_inet() {
         ],
     };
     let json = json!({"nftables":[{"add":{"table":{"family":"inet","name":"some_inet_table"}}},{"add":{"chain":{"family":"inet","table":"some_inet_table","name":"some_inet_chain","type":"filter","hook":"forward","policy":"accept"}}}]});
+    println!("{}", &json);
+    let parsed: Nftables = serde_json::from_value(json).unwrap();
+    assert_eq!(expected, parsed);
+}
+
+#[test]
+/// Test JSON serialization of flow and flowtable.
+fn test_flowtable() {
+    // nft add table inet some_inet_table
+    // nft add chain inet some_inet_table some_inet_chain '{ type filter hook forward priority 0; policy accept; }'
+    let expected: Nftables = Nftables {
+        objects: vec![
+            NfObject::ListObject(Box::new(NfListObject::Table(Table {
+                family: NfFamily::INet,
+                name: "some_inet_table".to_string(),
+                handle: None,
+            }))),
+            NfObject::CmdObject(NfCmd::Add(NfListObject::Chain(Chain {
+                family: NfFamily::INet,
+                table: "some_inet_table".to_string(),
+                name: "some_inet_chain".to_string(),
+                newname: None,
+                handle: None,
+                _type: Some(NfChainType::Filter),
+                hook: Some(NfHook::Forward),
+                prio: None,
+                dev: None,
+                policy: Some(NfChainPolicy::Accept),
+            }))),
+            NfObject::CmdObject(NfCmd::Add(NfListObject::FlowTable(FlowTable {
+                family: NfFamily::INet,
+                table: "some_inet_table".to_string(),
+                name: "flowed".to_string(),
+                handle: None,
+                hook: Some(NfHook::Ingress),
+                prio: Some(0),
+                dev: Some(vec!["lo".to_string()]),
+            }))),
+            NfObject::CmdObject(NfCmd::Add(NfListObject::Rule(Rule {
+                family: NfFamily::INet,
+                table: "some_inet_table".to_string(),
+                chain: "some_inet_chain".to_string(),
+                expr: vec![
+                    Statement::Flow(stmt::Flow {
+                        op: stmt::SetOp::Add,
+                        flowtable: "flowed".to_string(),
+                    }),
+                    Statement::Match(Match {
+                        left: Expression::Named(NamedExpression::CT(expr::CT {
+                            key: "state".to_string(),
+                            family: None,
+                            dir: None,
+                        })),
+                        op: Operator::IN,
+                        right: Expression::String("established".to_string()),
+                    }),
+                ],
+                handle: None,
+                index: None,
+                comment: None,
+            }))),
+        ],
+    };
+    let json = json!({"nftables":[{"table":{"family":"inet","name":"some_inet_table"}},{"flowtable":{"dev":"lo","family":"inet","hook":"ingress","name":"flowed","prio":0,"table":"some_inet_table"}},{"chain":{"family":"inet","name":"forward","table":"some_inet_table"}},{"rule":{"chain":"forward","expr":[{"match":{"left":{"ct":{"key":"state"}},"op":"in","right":"established"}},{"flow":{"flowtable":"@flowed","op":"add"}}],"family":"inet","table":"some_inet_table"}}]});
     println!("{}", &json);
     let parsed: Nftables = serde_json::from_value(json).unwrap();
     assert_eq!(expected, parsed);

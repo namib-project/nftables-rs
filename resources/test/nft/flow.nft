@@ -1,0 +1,15 @@
+#!/sbin/nft -f
+
+flush ruleset
+
+table inet named_counter_demo {
+  flowtable flowed {
+    hook ingress priority filter
+    devices = { lo }
+  }
+
+  chain forward {
+    type filter hook forward priority filter; policy accept;
+    ct state established flow add @flowed
+  }
+}
