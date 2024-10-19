@@ -117,11 +117,13 @@ pub struct Match {
 #[serde(untagged)]
 /// Anonymous or named Counter.
 pub enum Counter {
+    /// A counter referenced by name.
     Named(String),
+    /// An anonymous counter.
     Anonymous(Option<AnonymousCounter>),
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Eq, PartialEq, Serialize, Deserialize)]
 /// This object represents a byte/packet counter.
 /// In input, no properties are required.
 /// If given, they act as initial values for the counter.
