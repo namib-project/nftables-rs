@@ -13,6 +13,12 @@ env:
   RUSTFLAGS: "-Dwarnings"
 
 jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    name: Commitlint
+    steps:
+      - name: Conventional Commitlint
+        uses: opensource-nepal/commitlint@v1
   fmt:
     name: Rustfmt
     runs-on: ubuntu-latest
