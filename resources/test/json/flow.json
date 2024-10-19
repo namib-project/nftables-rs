@@ -1,0 +1,68 @@
+{
+  "nftables": [
+    {
+      "metainfo": {
+        "version": "1.0.9",
+        "release_name": "Old Doc Yak #3",
+        "json_schema_version": 1
+      }
+    },
+    {
+      "table": {
+        "family": "inet",
+        "name": "named_counter_demo",
+        "handle": 3
+      }
+    },
+    {
+      "flowtable": {
+        "family": "inet",
+        "name": "flowed",
+        "table": "named_counter_demo",
+        "handle": 2,
+        "hook": "ingress",
+        "prio": 0,
+        "dev": "lo"
+      }
+    },
+    {
+      "chain": {
+        "family": "inet",
+        "table": "named_counter_demo",
+        "name": "forward",
+        "handle": 1,
+        "type": "filter",
+        "hook": "forward",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
+      "rule": {
+        "family": "inet",
+        "table": "named_counter_demo",
+        "chain": "forward",
+        "handle": 3,
+        "expr": [
+          {
+            "match": {
+              "op": "in",
+              "left": {
+                "ct": {
+                  "key": "state"
+                }
+              },
+              "right": "established"
+            }
+          },
+          {
+            "flow": {
+              "op": "add",
+              "flowtable": "@flowed"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
