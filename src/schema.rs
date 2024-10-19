@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::{expr::Expression, stmt::Statement, types::*};
+use crate::{expr::Expression, stmt::Statement, types::*, visitor::single_string_to_option_vec};
 
 use serde::{Deserialize, Serialize};
 
@@ -298,16 +298,30 @@ pub struct Element {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+/// Flowtables allow you to accelerate packet forwarding in software (and in hardware if your NIC supports it)
+/// by using a conntrack-based network stack bypass.
 pub struct FlowTable {
-    pub family: String,
+    /// Family the FlowTable is addressed by.
+    pub family: NfFamily,
+    /// Table the FlowTable is addressed by.
     pub table: String,
+    /// Name the FlowTable is addressed by.
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
+    /// Handle of the FlowTable object in the current ruleset.
     pub handle: Option<u32>,
+    /// Hook the FlowTable resides in.
     pub hook: Option<NfHook>,
-    #[serde(skip_serializing_if = "Option::is_none")]
+    /// The *priority* can be a signed integer or *filter* which stands for 0.
+    /// Addition and subtraction can be used to set relative priority, e.g., filter + 5 is equal to 5.
     pub prio: Option<u32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "single_string_to_option_vec"
+    )]
+    /// The *devices* are specified as iifname(s) of the input interface(s) of the traffic that should be offloaded.
+    /// Devices are required for both traffic directions.
     pub dev: Option<Vec<String>>,
 }
 
