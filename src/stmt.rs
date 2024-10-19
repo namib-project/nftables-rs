@@ -29,10 +29,8 @@ pub enum Statement {
     Goto(JumpTarget),
 
     Match(Match),
-    Counter(Option<Counter>),
-    #[serde(rename = "counter")]
-    /// reference to a named counter
-    CounterRef(String),
+    /// anonymous or named counter.
+    Counter(Counter),
     Mangle(Mangle),
     Quota(Quota),
     #[serde(rename = "quota")]
@@ -116,10 +114,20 @@ pub struct Match {
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+/// Anonymous or named Counter.
+pub enum Counter {
+    /// A counter referenced by name.
+    Named(String),
+    /// An anonymous counter.
+    Anonymous(Option<AnonymousCounter>),
+}
+
+#[derive(Debug, Default, Clone, Eq, PartialEq, Serialize, Deserialize)]
 /// This object represents a byte/packet counter.
 /// In input, no properties are required.
 /// If given, they act as initial values for the counter.
-pub struct Counter {
+pub struct AnonymousCounter {
     #[serde(skip_serializing_if = "Option::is_none")]
     /// Packets counted.
     pub packets: Option<usize>,

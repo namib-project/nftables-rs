@@ -2,8 +2,8 @@
   "nftables": [
     {
       "metainfo": {
-        "version": "0.9.8",
-        "release_name": "E.D.S.",
+        "version": "1.0.9",
+        "release_name": "Old Doc Yak #3",
         "json_schema_version": 1
       }
     },
@@ -11,7 +11,7 @@
       "table": {
         "family": "inet",
         "name": "filter",
-        "handle": 65
+        "handle": 1
       }
     },
     {
@@ -27,11 +27,35 @@
       }
     },
     {
+      "chain": {
+        "family": "inet",
+        "table": "filter",
+        "name": "forward",
+        "handle": 2,
+        "type": "filter",
+        "hook": "forward",
+        "prio": 0,
+        "policy": "drop"
+      }
+    },
+    {
+      "chain": {
+        "family": "inet",
+        "table": "filter",
+        "name": "output",
+        "handle": 3,
+        "type": "filter",
+        "hook": "output",
+        "prio": 0,
+        "policy": "accept"
+      }
+    },
+    {
       "rule": {
         "family": "inet",
         "table": "filter",
         "chain": "input",
-        "handle": 5,
+        "handle": 4,
         "comment": "early drop of invalid packets",
         "expr": [
           {
@@ -323,18 +347,6 @@
       }
     },
     {
-      "chain": {
-        "family": "inet",
-        "table": "filter",
-        "name": "forward",
-        "handle": 2,
-        "type": "filter",
-        "hook": "forward",
-        "prio": 0,
-        "policy": "drop"
-      }
-    },
-    {
       "rule": {
         "family": "inet",
         "table": "filter",
@@ -349,18 +361,6 @@
             }
           }
         ]
-      }
-    },
-    {
-      "chain": {
-        "family": "inet",
-        "table": "filter",
-        "name": "output",
-        "handle": 3,
-        "type": "filter",
-        "hook": "output",
-        "prio": 0,
-        "policy": "accept"
       }
     },
     {

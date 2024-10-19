@@ -2,8 +2,8 @@
   "nftables": [
     {
       "metainfo": {
-        "version": "0.9.8",
-        "release_name": "E.D.S.",
+        "version": "1.0.9",
+        "release_name": "Old Doc Yak #3",
         "json_schema_version": 1
       }
     },
@@ -11,7 +11,7 @@
       "table": {
         "family": "ip",
         "name": "nat",
-        "handle": 60
+        "handle": 1
       }
     },
     {
