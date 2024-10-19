@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::{expr::Expression, stmt::Statement, types::*};
+use crate::{expr::Expression, stmt::Statement, types::*, visitor::single_string_to_option_vec};
 
 use serde::{Deserialize, Serialize};
 
@@ -299,7 +299,7 @@ pub struct Element {
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct FlowTable {
-    pub family: String,
+    pub family: NfFamily,
     pub table: String,
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -307,7 +307,11 @@ pub struct FlowTable {
     pub hook: Option<NfHook>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub prio: Option<u32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "single_string_to_option_vec"
+    )]
     pub dev: Option<Vec<String>>,
 }
 
