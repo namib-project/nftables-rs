@@ -101,3 +101,19 @@ pub enum SynProxyFlag {
     /// Pass client selective acknowledgement option to backend.
     SackPerm,
 }
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+/// A time unit (used by [limits][crate::schema::Limit]).
+pub enum NfTimeUnit {
+    /// A second.
+    Second,
+    /// A minute (60 seconds).
+    Minute,
+    /// An hour (3600 seconds).
+    Hour,
+    /// A day (86400 seconds).
+    Day,
+    /// A week (604800 seconds).
+    Week,
+}
