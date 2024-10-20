@@ -3,7 +3,7 @@ use std::{collections::HashSet, fmt::Formatter, marker::PhantomData, str::FromSt
 
 use crate::stmt::LogFlag;
 
-/// Deserialize null, a string or string sequence into an `Option<Vec<String>>`.
+/// Deserialize null, a string, or string sequence into an `Option<Vec<String>>`.
 pub fn single_string_to_option_vec<'de, D>(deserializer: D) -> Result<Option<Vec<String>>, D::Error>
 where
     D: de::Deserializer<'de>,
