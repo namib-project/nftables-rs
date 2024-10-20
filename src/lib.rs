@@ -26,3 +26,8 @@ pub mod helper;
 
 /// Contains node visitors for serde.
 pub mod visitor;
+
+// Default values for Default implementations.
+const DEFAULT_FAMILY: types::NfFamily = types::NfFamily::INet;
+const DEFAULT_TABLE: &str = "filter";
+const DEFAULT_CHAIN: &str = "forward";
