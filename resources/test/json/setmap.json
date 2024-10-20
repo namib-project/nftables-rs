@@ -1,0 +1,115 @@
+{
+  "nftables": [
+    {
+      "metainfo": {
+        "version": "1.0.9",
+        "release_name": "Old Doc Yak #3",
+        "json_schema_version": 1
+      }
+    },
+    {
+      "table": {
+        "family": "ip",
+        "name": "nat",
+        "handle": 9
+      }
+    },
+    {
+      "map": {
+        "family": "ip",
+        "name": "porttoip",
+        "table": "nat",
+        "type": "inet_service",
+        "handle": 3,
+        "map": "ipv4_addr",
+        "elem": [
+          [
+            80,
+            "192.168.1.100"
+          ],
+          [
+            8888,
+            "192.168.1.101"
+          ]
+        ]
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "nat",
+        "name": "prerouting",
+        "handle": 1
+      }
+    },
+    {
+      "chain": {
+        "family": "ip",
+        "table": "nat",
+        "name": "postrouting",
+        "handle": 2
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "nat",
+        "chain": "prerouting",
+        "handle": 5,
+        "expr": [
+          {
+            "dnat": {
+              "addr": {
+                "map": {
+                  "key": {
+                    "payload": {
+                      "protocol": "tcp",
+                      "field": "dport"
+                    }
+                  },
+                  "data": {
+                    "set": [
+                      [
+                        80,
+                        "192.168.1.100"
+                      ],
+                      [
+                        8888,
+                        "192.168.1.101"
+                      ]
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "rule": {
+        "family": "ip",
+        "table": "nat",
+        "chain": "postrouting",
+        "handle": 6,
+        "expr": [
+          {
+            "snat": {
+              "addr": {
+                "map": {
+                  "key": {
+                    "payload": {
+                      "protocol": "tcp",
+                      "field": "dport"
+                    }
+                  },
+                  "data": "@porttoip"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+#!/sbin/nft -f
+
+# https://wiki.nftables.org/wiki-nftables/index.php/Maps
+
+flush ruleset
+
+table ip nat {
+	map porttoip {
+		type inet_service : ipv4_addr
+		elements = { 80 : 192.168.1.100, 8888 : 192.168.1.101 }
+	}
+
+	chain prerouting {
+		dnat to tcp dport map { 80 : 192.168.1.100, 8888 : 192.168.1.101 }
+	}
+
+	chain postrouting {
+		snat to tcp dport map @porttoip
+	}
+}
