@@ -380,7 +380,10 @@ pub struct Limit {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub rate: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub per: Option<String>,
+    /// Time unit to apply the limit to, e.g. "week", "day", "hour", etc.
+    ///
+    /// If omitted, defaults to "second".
+    pub per: Option<NfTimeUnit>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub burst: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
