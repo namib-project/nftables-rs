@@ -38,6 +38,9 @@ pub enum Statement {
     QuotaRef(String),
     Limit(Limit),
 
+    /// The Flow statement offloads matching network traffic to flowtables,
+    /// enabling faster forwarding by bypassing standard processing.
+    Flow(Flow),
     FWD(Option<FWD>),
     /// Disable connection tracking for the packet.
     Notrack,
@@ -183,6 +186,15 @@ pub struct Limit {
     #[serde(skip_serializing_if = "Option::is_none")]
     /// If `true`, will match if the limit was exceeded. Defaults to `false`.
     pub inv: Option<bool>,
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+/// Forward a packet to a different destination.
+pub struct Flow {
+    /// Operator on flow/set.
+    pub op: SetOp,
+    /// The [flow table][crate::schema::FlowTable]'s name.
+    pub flowtable: String,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
