@@ -1,3 +1,13 @@
+//! nftables-rs is a Rust library designed to provide a safe and easy-to-use abstraction over the nftables JSON API, known as libnftables-json.
+//!
+//! This library is engineered for developers who need to interact with nftables,
+//! the Linux kernel's next-generation firewalling tool, directly from Rust applications.
+//!
+//! By abstracting the underlying JSON API, nftables-rs facilitates the creation, manipulation,
+//! and application of firewall rulesets without requiring deep knowledge of nftables' internal workings.
+
+// TODO: add example usage to library doc
+
 /// Contains Batch object to be used to prepare Nftables payloads.
 pub mod batch;
 
@@ -26,3 +36,8 @@ pub mod helper;
 
 /// Contains node visitors for serde.
 pub mod visitor;
+
+// Default values for Default implementations.
+const DEFAULT_FAMILY: types::NfFamily = types::NfFamily::INet;
+const DEFAULT_TABLE: &str = "filter";
+const DEFAULT_CHAIN: &str = "forward";
