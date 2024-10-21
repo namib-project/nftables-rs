@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use strum_macros::EnumString;
 
-use crate::types::RejectCode;
+use crate::types::{RejectCode, SynProxyFlag};
 use crate::visitor::single_string_to_option_hashset_logflag;
 
 use crate::expr::Expression;
@@ -36,6 +36,7 @@ pub enum Statement {
     #[serde(rename = "quota")]
     /// reference to a named quota object
     QuotaRef(String),
+    // TODO: last
     Limit(Limit),
 
     /// The Flow statement offloads matching network traffic to flowtables,
@@ -51,6 +52,7 @@ pub enum Statement {
     Redirect(Option<NAT>),   // redirect is subset of NAT options
     Reject(Option<Reject>),
     Set(Set),
+    // TODO: map
     Log(Option<Log>),
 
     #[serde(rename = "ct helper")]
@@ -60,6 +62,7 @@ pub enum Statement {
     Meter(Meter),
     Queue(Queue),
     #[serde(rename = "vmap")]
+    // TODO: vmap is expr, not stmt!
     VerdictMap(VerdictMap),
 
     #[serde(rename = "ct count")]
@@ -76,9 +79,12 @@ pub enum Statement {
     /// This represents an xt statement from xtables compat interface.
     /// Sadly, at this point, it is not possible to provide any further information about its content.
     XT(Option<serde_json::Value>),
-
+    /// A netfilter synproxy intercepts new TCP connections and handles the initial 3-way handshake using syncookies instead of conntrack to establish the connection.
+    SynProxy(SynProxy),
     /// Redirects the packet to a local socket without changing the packet header in any way.
     TProxy(TProxy),
+    // TODO: reset
+    // TODO: secmark
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
@@ -442,6 +448,22 @@ pub struct CTCount {
     #[serde(skip_serializing_if = "Option::is_none")]
     /// If `true`, match if `val` was exceeded. If omitted, defaults to `false`.
     pub inv: Option<bool>,
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+/// Limit the number of connections using conntrack.
+///
+/// Anonymous synproxy was requires **nftables 0.9.2 or newer**.
+pub struct SynProxy {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// maximum segment size (must match your backend server)
+    pub mss: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// window scale (must match your backend server)
+    pub wscale: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    /// The synproxy's [flags][crate::types::SynProxyFlag].
+    pub flags: Option<HashSet<SynProxyFlag>>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
