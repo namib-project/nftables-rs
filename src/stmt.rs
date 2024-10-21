@@ -11,6 +11,7 @@ use crate::expr::Expression;
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
+#[non_exhaustive]
 /// Statements are the building blocks for rules. Each rule consists of at least one.
 ///
 /// See <https://manpages.debian.org/testing/libnftables1/libnftables-json.5.en.html#STATEMENTS>.
