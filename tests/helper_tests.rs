@@ -4,7 +4,8 @@ use nftables::{
     batch::Batch,
     expr,
     helper::{self, NftablesError},
-    schema, types,
+    schema::{self, Table},
+    types,
 };
 use serial_test::serial;
 
@@ -67,10 +68,11 @@ fn test_apply_ruleset() {
 fn test_remove_unknown_table() {
     flush_ruleset().expect("failed to flush ruleset");
     let mut batch = Batch::new();
-    batch.delete(schema::NfListObject::Table(schema::Table::new(
-        types::NfFamily::IP6,
-        "i-do-not-exist".to_string(),
-    )));
+    batch.delete(schema::NfListObject::Table(schema::Table {
+        family: types::NfFamily::IP6,
+        name: "i-do-not-exist".to_string(),
+        ..Table::default()
+    }));
     let ruleset = batch.to_nftables();
 
     let result = nftables::helper::apply_ruleset(&ruleset, None, None);
@@ -82,10 +84,11 @@ fn example_ruleset(with_undo: bool) -> schema::Nftables {
     let mut batch = Batch::new();
     // create table "test-table-01"
     let table_name = "test-table-01".to_string();
-    batch.add(schema::NfListObject::Table(schema::Table::new(
-        types::NfFamily::IP,
-        table_name.clone(),
-    )));
+    batch.add(schema::NfListObject::Table(Table {
+        name: table_name.clone(),
+        family: types::NfFamily::IP,
+        ..Table::default()
+    }));
     // create named set "test_set"
     let set_name = "test_set".to_string();
     batch.add(schema::NfListObject::Set(schema::Set {
@@ -103,14 +106,12 @@ fn example_ruleset(with_undo: bool) -> schema::Nftables {
         comment: None,
     }));
     // create named map "test_map"
-    let map_name = "test_map".to_string();
-    let map_type = "verdict".to_string();
     batch.add(schema::NfListObject::Map(schema::Map {
         family: types::NfFamily::IP,
         table: table_name.clone(),
-        name: map_name,
+        name: "test_map".to_string(),
         handle: None,
-        map: map_type,
+        map: schema::SetTypeValue::Single(schema::SetType::EtherAddr),
         set_type: schema::SetTypeValue::Single(schema::SetType::Ipv4Addr),
         policy: None,
         flags: None,
@@ -131,10 +132,11 @@ fn example_ruleset(with_undo: bool) -> schema::Nftables {
         ],
     }));
     if with_undo {
-        batch.delete(schema::NfListObject::Table(schema::Table::new(
-            types::NfFamily::IP,
-            "test-table-01".to_string(),
-        )));
+        batch.delete(schema::NfListObject::Table(schema::Table {
+            family: types::NfFamily::IP,
+            name: "test-table-01".to_string(),
+            ..Table::default()
+        }));
     }
     batch.to_nftables()
 }
