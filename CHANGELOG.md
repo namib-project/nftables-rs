@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.0](https://github.com/namib-project/nftables-rs/compare/v0.4.1...v0.5.0)
+
+### ⛰️ Features
+
+- *(schema)* [**breaking**] Add default impl, add doc comments - ([abd3156](https://github.com/namib-project/nftables-rs/commit/abd3156e846c13be3a9c8a9df31395580ba0d75b))
+- *(schema)* Qualify limit's per-attribute as time unit enum - ([42c399d](https://github.com/namib-project/nftables-rs/commit/42c399d2d26e8cb4ae9324e5315bcb746beb6f10))
+- *(stmt)* Implement flow statement - ([a3209cb](https://github.com/namib-project/nftables-rs/commit/a3209cb2c293f64043d96a454dee9970eeda679a))
+- Add synproxy statement and list object - ([0108fbf](https://github.com/namib-project/nftables-rs/commit/0108fbfc9ecf6523083b4bd77215431a90e11c16))
+
+### 🐛 Bug Fixes
+
+- *(stmt)* [**breaking**] Fix named counter - ([9f109c5](https://github.com/namib-project/nftables-rs/commit/9f109c51e4b657acf1194e4342f175b0394d2cd8))
+- Add doc comment and trait derive to counters - ([617b071](https://github.com/namib-project/nftables-rs/commit/617b071330960cc8092ded5fcbaf91c0579e35d1))
+- [**breaking**] Store NfListObjects in heap - ([51ccf10](https://github.com/namib-project/nftables-rs/commit/51ccf106dac1b810eec6d61af602284d594c440a))
+
+### 📚 Documentation
+
+- *(lib)* Add library description - ([2e98483](https://github.com/namib-project/nftables-rs/commit/2e98483b74a75c0e3dfed9dc53cc8d87ee0edda4))
+- *(readme)* Add @JKRhb as maintainer - ([021abc1](https://github.com/namib-project/nftables-rs/commit/021abc1cbf636f980084e8390924691fa873d3df))
+- *(visitor)* Fix doc comment syntax - ([d8e0c68](https://github.com/namib-project/nftables-rs/commit/d8e0c68391fdaa07c66ebb53e202239fae53be4b))
+- Fix long doc comments in expr, stmt - ([290c5bb](https://github.com/namib-project/nftables-rs/commit/290c5bbb0c3890c0fa94b915e27b1d26b48f5042))
+- Add doc comments for tproxy - ([e13a5ed](https://github.com/namib-project/nftables-rs/commit/e13a5ed90d9dcc9475e66e64ad0dc29a7bc71514))
+
+### 🧪 Testing
+
+- *(schema)* Add set and map nft/json test - ([03db827](https://github.com/namib-project/nftables-rs/commit/03db827a9a8630a3f10129b91eb47b06cb667c36))
+- *(stmt)* Add serialization test for flow, flowtable - ([fd88573](https://github.com/namib-project/nftables-rs/commit/fd8857314d8a611724d753567664fd9301d4299e))
+- Refactor nftables-json test script with unshare - ([3799022](https://github.com/namib-project/nftables-rs/commit/3799022069311f47770aa061da5c05bf70e306bb))
+- Add test for synproxy - ([910315b](https://github.com/namib-project/nftables-rs/commit/910315ba22a8fc2f38e3d0e2ac84c670deb2ec82))
+- Re-convert json data from nftables files - ([1ca5421](https://github.com/namib-project/nftables-rs/commit/1ca5421807e4663087cdcf5801ead27b74eb6b72))
+
+
 ## [0.4.1] - 2024-05-27
 
 ### ⚙️ Miscellaneous Tasks
