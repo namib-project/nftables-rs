@@ -6,6 +6,19 @@ All notable changes to this project will be documented in this file.
 
 ## [0.5.0](https://github.com/namib-project/nftables-rs/compare/v0.4.1...v0.5.0)
 
+This release completes documentation for `schema` and adds support for **tproxy**,
+**synproxy** and **flow**/**flowtable** statements/objects.
+
+### ⚠️ Breaking Changes
+
+- Enum `stmt::Statement`:
+  - adds variants `Flow`, `SynProxy` and `TProxy`,
+  - removes variant `CounterRef`,
+  - receives a `#[non_exhaustive]` mark.
+- Struct `stmt::Counter` became enum.
+- Enum `schema::NfListObject` adds variant `SynProxy`.
+- Removed functions `schema::Table::new()`, `schema::Table::new()` and `schema::Rule::new()`.
+
 ### ⛰️ Features
 
 - *(schema)* [**breaking**] Add default impl, add doc comments - ([abd3156](https://github.com/namib-project/nftables-rs/commit/abd3156e846c13be3a9c8a9df31395580ba0d75b))
