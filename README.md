@@ -44,7 +44,7 @@ By abstracting the underlying JSON API, nftables-rs facilitates the creation, ma
 
 ```toml
 [dependencies]
-nftables = "0.3.0"
+nftables = "0.5"
 ```
 
 Linux nftables v0.9.3 or newer is required at runtime: `nft --version`
