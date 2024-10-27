@@ -2,7 +2,8 @@ name: Rust
 
 on:
   push:
-    branches: [ "*" ]
+    branches:
+      - main
   pull_request:
     branches: [ "*" ]
   schedule:
