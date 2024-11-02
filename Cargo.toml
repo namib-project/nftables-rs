@@ -26,4 +26,9 @@ strum_macros = "0.26.4"
 thiserror = "2.0.0"
 
 [dev-dependencies]
+datatest-stable = "0.2.9"
 serial_test = "3.1.0"
+
+[[test]]
+name = "deserialize"
+harness = false

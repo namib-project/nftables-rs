@@ -2,25 +2,6 @@ use nftables::expr::{self, Expression, Meta, MetaKey, NamedExpression};
 use nftables::stmt::{self, Counter, Match, Operator, Queue, Statement};
 use nftables::{schema::*, types::*};
 use serde_json::json;
-use std::fs::{self, File};
-use std::io::BufReader;
-use std::path::PathBuf;
-
-#[test]
-fn test_deserialize_json_files() {
-    let mut d = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    d.push("resources/test/json");
-    println!("Loading tests from {}.", d.display());
-
-    for path in fs::read_dir(&d).expect("Unable to list files") {
-        let path = path.unwrap();
-        println!("Deserializing file: {}", path.path().display());
-        let file = File::open(path.path()).expect("Cannot open file");
-        let reader = BufReader::new(file);
-        let nf: Nftables = serde_json::from_reader(reader).expect("Could not deserialize file");
-        println!("Deserialized document: {:?}", nf);
-    }
-}
 
 #[test]
 fn test_chain_table_rule_inet() {
