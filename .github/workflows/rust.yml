@@ -47,9 +47,19 @@ jobs:
   build:
     name: Rust Build & Test
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust_version:
+          - { name: msrv, version: "1.65" }
+          - { name: stable, version: stable }
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+      - name: Install Rust ${{ matrix.rust_version.name }} (${{ matrix.rust_version.version }})
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.rust_version.version }}
       - name: Build
         run: cargo build --verbose
       - name: Run tests

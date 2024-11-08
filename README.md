@@ -117,6 +117,12 @@ fn test_chain_table_rule_inet() {
 }
 ```
 
+## MSRV (Minimum Supported Rust Version)
+
+The MSRV of this crate is currently: **Rust 1.65**
+
+The MSRV will only be increased by a minor or major release of this crate.
+
 ## License
 
 Licensed under either of
