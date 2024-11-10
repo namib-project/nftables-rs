@@ -12,6 +12,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: "-Dwarnings"
+  RUSTMSRV: "1.65"
 
 jobs:
   commitlint:
@@ -45,21 +46,13 @@ jobs:
       - name: Run Clippy
         run: cargo clippy --all-targets --all-features
   build:
-    name: Rust Build & Test
+    name: Rust Build & Test (Stable)
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        rust_version:
-          - { name: msrv, version: "1.65" }
-          - { name: stable, version: stable }
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Install Rust ${{ matrix.rust_version.name }} (${{ matrix.rust_version.version }})
+      - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: ${{ matrix.rust_version.version }}
       - name: Build
         run: cargo build --verbose
       - name: Run tests
@@ -70,3 +63,15 @@ jobs:
           cargo --config \
             "target.'cfg(target_os = \"linux\")'.runner = 'unshare -rn'" \
             test --verbose -- --ignored
+  build-msrv:
+    name: Rust Build (MSRV)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Install Rust msrv (${{ env.RUSTMSRV }})
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ env.RUSTMSRV }}
+      - name: Build
+        run: cargo build --verbose
