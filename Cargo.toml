@@ -27,7 +27,7 @@ thiserror = "2.0.3"
 
 [dev-dependencies]
 datatest-stable = "0.2.9"
-serial_test = "3.1.0"
+serial_test = "3.2.0"
 
 [[test]]
 name = "deserialize"
