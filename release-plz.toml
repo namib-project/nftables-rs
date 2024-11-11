@@ -17,6 +17,16 @@ allow_dirty = false
 publish_allow_dirty = false
 # disable running `cargo-semver-checks`
 semver_check = true
+# add contributors to changelog of git release
+git_release_body = """
+{{ changelog }}
+{% if remote.contributors %}
+### Contributors
+{% for contributor in remote.contributors %}
+* @{{ contributor.username }}
+{% endfor %}
+{% endif %}
+"""
 
 [changelog]
 header = """# Changelog
