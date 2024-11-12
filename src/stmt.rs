@@ -33,10 +33,8 @@ pub enum Statement {
     /// anonymous or named counter.
     Counter(Counter),
     Mangle(Mangle),
-    Quota(Quota),
-    #[serde(rename = "quota")]
-    /// reference to a named quota object
-    QuotaRef(String),
+    /// anonymous or named quota.
+    Quota(QuotaOrQuotaRef),
     // TODO: last
     Limit(Limit),
 
@@ -153,6 +151,16 @@ pub struct Mangle {
     pub key: Expression,
     /// Value to change data to.
     pub value: Expression,
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+/// Represents an anonymous or named quota object.
+pub enum QuotaOrQuotaRef {
+    /// Anonymous quota object.
+    Quota(Quota),
+    /// Reference to a named quota object.
+    QuotaRef(String),
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
