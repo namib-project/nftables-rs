@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.6.0](https://github.com/nftables-rs/nftables-rs/compare/v0.5.0...v0.6.0)
+
+### 🐛 Bug Fixes
+
+- *(stmt)* [**breaking**] Match anonymous and named quotas - ([61ba8ea](https://github.com/nftables-rs/nftables-rs/commit/61ba8eaec6502674104b77666dc89f8bc052e7ad))
+
+### 📚 Documentation
+
+- Define msrv - ([dfc8517](https://github.com/nftables-rs/nftables-rs/commit/dfc8517372dd8360dac27fbf8859d32b2f8f8bad))
+
+### 🧪 Testing
+
+- *(deserialize)* Generate deserialize tests with harness - ([68332fd](https://github.com/nftables-rs/nftables-rs/commit/68332fd8dfe3d03921b8f0fad64a324ba4b6b326))
+
+
 ## [0.5.0](https://github.com/namib-project/nftables-rs/compare/v0.4.1...v0.5.0)
 
 This release completes documentation for `schema` and adds support for **tproxy**,
